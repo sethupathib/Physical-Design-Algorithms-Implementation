@@ -1,8 +1,8 @@
 # Physical Design Algorithm Implementation
 
-**1. Classical Problem -- Steiner Tree Routing**
+[**1. Steiner Tree Routing**](https://github.com/sethupathib/Physical-Design-Algorithms-Implementation/tree/main/Steiner%20Routing)
 
-**Steps--**
+Steps--
 1. Implement Kruskal's MST using DSU.
 2. Implement Steiner Tree using MST (A lot more complex than this).
 
