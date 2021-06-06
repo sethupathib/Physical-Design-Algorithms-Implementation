@@ -1,4 +1,4 @@
-# Physical Design Algorithm Design/Implementation
+# Physical Design Algorithm Implementation
 
 **Classic Problem -- Steiner Tree Routing**
 **Steps**
