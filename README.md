@@ -1,4 +1,4 @@
-# Physical Design Algorithm Implementation
+# Physical Design Algorithm Implementation & Case Study
 
 [**1. Steiner Tree Routing**](https://github.com/sethupathib/Physical-Design-Algorithms-Implementation/tree/main/Steiner%20Routing)
 
@@ -7,6 +7,8 @@ Steps--
 2. Implement Steiner Tree using MST (A lot more complex than this).
 
 Reference -- [**Physical Design Course by Yao-Wen Chang.**](https://github.com/Daikon-Sun/Physical-Design-for-Nanometer-ICs)
+
+--------------------------------------
 
 **Case Study--**
 1. [**Register Clustering for Optimal PPA**](https://dl.acm.org/doi/10.1145/3299902.3309753) and [**ISPD Slides.**](http://ispd.cc/slides/2019/2_placement_GracefulReg.pdf)
