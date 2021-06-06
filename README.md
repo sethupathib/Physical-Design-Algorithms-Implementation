@@ -1,7 +1,8 @@
 # Physical Design Algorithm Implementation
 
 **Classic Problem -- Steiner Tree Routing**
-**Steps**
+
+**Steps--**
 1. Implement Kruskal's MST using DSU.
 2. Implement Steiner Tree using MST (A lot more complex than this).
 
