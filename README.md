@@ -1,10 +1,10 @@
-# Placer
-Design of a Placement,Routing and Timing Engine.
+# Simple Routing Engine Design
 
-Started on 17th Oct 2020. The idea is to follow UIUC Lecture on VLSI CAD and implement a small placement and a routing Engine to get hands on VLSI CAD.
-All good till date.
+Classic Problem -- Steiner Tree Routing
 
-**27th Oct 2020** -- This project seems to be incredibly hard. I can't figure out a lot of things. I am going ahead with the Routing and the STA part.
-I could not design the placement engine as of now. Will definitely do it later.
+Step 1 -- Implement Kruskal's MST using DSU
+Step 2 -- Implement Steiner Tree using MST (A lot more complex than this)
 
-**1st Nov 2020** -- The chances of me getting an offer from TSMC seem to be extremely high. I am yet to complete the lectures.
+Reference -- [**Physical Design Course by Yao-Wen Chang**](https://github.com/Daikon-Sun/Physical-Design-for-Nanometer-ICs)
+
+
