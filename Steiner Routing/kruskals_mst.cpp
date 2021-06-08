@@ -113,6 +113,8 @@ void addEdge(int x, int y, int w){
 int main(){
 
 	Graph g(4);
+	//method signature
+	//Node1, Node2, Weight
 	g.addEdge(0,1,1);
 	g.addEdge(1,3,3);
 	g.addEdge(3,2,2);
