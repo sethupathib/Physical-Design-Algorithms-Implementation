@@ -1,3 +1,4 @@
+#Brief Steps
 1. DSU
 2. MST
 3. Euler Tours
