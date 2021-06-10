@@ -1,117 +1,106 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
+#include <bits/stdc++.h>
 using namespace std;
 
+//Step 1 -- Form DSU
+//Step 2 -- Implement MST
 
-//DSU Class
+//DSU 
+//1. FindSet
+//2. UnionSet
+
+//Here DSU is implemented as a class and not a function.
+//In "detect_cycle.cpp", DSU was implemented as a function.
 
 class DSU {
-
-int *parent;
-int *rank;
-
+	int *parent;
+	int *rank;
 public:
+
 	DSU(int n){
-	  parent = new int[n];
-	 rank = new int[n];
+		parent = new int[n];
+		rank = new int[n];
 
-	 for(int i=0;i<n;i++){
-	 	parent[i] = -1;
-	 	rank[i] = 1;
-	 }
-	} 
+		for(int i=0;i<n;i++){
+			parent[i] =-1;
+			rank[i] =1;
+		}
+	}
 
-	//Find Function 
-	int find(int i){
-
-		//base case
-
+	int findSet(int i){
 		if(parent[i]==-1){
 			return i;
 		}
-		//path compression optimisation
-		return parent[i] = find(parent[i]);
-
-
+		return parent[i] = findSet(parent[i]);
 	}
 
-	//Unite Function 
-	void unite(int x, int y){
-		int s1 = find(x);
-		int s2 = find(y);
+	void unionSet(int x, int y){
+		int s1 = findSet(x);
+		int s2 = findSet(y);
 
-		//the code below unites the two components without union by rank compression
-
-		// if(s1!= s2){
-		// 	parent[s1] = s2;  
 		if(s1!=s2){
-		if(rank[s1]<rank[s2]){
-			parent[s1] = s2;
-			rank[s2]+= rank[s1];
+			if(rank[s2]<rank[s1]){
+				parent[s2] = s1;
+				rank[s1]+=rank[s2];
+			}
+			else{
+				parent[s1]=s2;
+				rank[s2]+=rank[s1];
+			}
 		}
-		else{
-			parent[s2] = s1;
-		rank[s1]+= rank[s2];
 
-		}
-		}
 	}
-	
 
 };
 
+//Here Graph is designed as a class containing vector of vectors containing edges and weights
+// {Weight,Node1,Node2}
+// eg. {1,2,3},{2,2,3},{1,1,2}
+
 
 class Graph{
-
-int V;
-vector<vector <int> > edgelist;
+	int V;
+	vector <vector<int> > edgelist;
 
 public:
-Graph(int V){
-	this->V = V;
+	Graph(int V){
+		this->V = V;
+	}
 
-}
 
-void addEdge(int x, int y, int w){
-	vector<int> tmp;
-	tmp.push_back(w);
-	tmp.push_back(x);
-	tmp.push_back(y);
-	
-	edgelist.push_back(tmp);
-}
+	void addEdge(int x, int y, int w){
+		vector<int> temp;
+		temp.push_back(w);
+		temp.push_back(x);
+		temp.push_back(y);
+		edgelist.push_back(temp);
+	}
 
 	int kruskals_mst(){
+		//sort the weights
+		sort(edgelist.begin(),edgelist.end());
 
-		//main logic -- easy
-		//sort all the edges based on weight
-		sort(edgelist.begin(), edgelist.end());
-
-		int ans =0;
+		int ans=0;
 		DSU s(V);
+		for(auto edges:edgelist){
+			//extract the information one by one
+			int w=edges[0];
+			int x=edges[1];
+			int y=edges[2];
 
-		
-		for(auto edge: edgelist){
-			int w = edge[0];
-			int x = edge[1];
-			int y = edge[2];
+			if(s.findSet(x)!=s.findSet(y)){
+				s.unionSet(x,y);
+				ans+=w;
+				cout<<x<<"->"<<y<<endl;
 
-			//take that edge in MST if it doesn't form a cycle
-
-			if(s.find(x)!= s.find(y)){
-				s.unite(x,y);
-				ans+=w; 
-				cout<<x<<" ->"<<y<<endl;
 			}
 		}
 		return ans;
 	}
 
+
 };
 
 int main(){
-
 	Graph g(4);
 	//method signature
 	//Node1, Node2, Weight
@@ -124,12 +113,20 @@ int main(){
 	cout<< g.kruskals_mst();
 
 
-
 	return 0;
 }
 
 
 
- 
+
+
+
+
+
+
+
+
+
+
 
 
