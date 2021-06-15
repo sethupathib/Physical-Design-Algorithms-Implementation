@@ -1,5 +1,5 @@
 # Physical Design Algorithm Implementation & Case Study
-Reference -- [**Physical Design Course by Yao-Wen Chang.**](https://github.com/Daikon-Sun/Physical-Design-for-Nanometer-ICs)
+Reference -- [**Physical Design Course by Prof. Yao-Wen Chang.**](https://github.com/Daikon-Sun/Physical-Design-for-Nanometer-ICs)
 
 ## **Steiner Tree Routing**
 
