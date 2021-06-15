@@ -1,7 +1,7 @@
 # Physical Design Algorithm Implementation & Case Study
 Reference -- [**Physical Design Course by Prof. Yao-Wen Chang.**](https://github.com/Daikon-Sun/Physical-Design-for-Nanometer-ICs)
 
-## **Steiner Tree Routing**
+## [**Steiner Tree Routing**](https://github.com/sethupathib/Physical-Design-Algorithms-Implementation/tree/main/Steiner%20Routing)
 
 Steps--
 1. Implement Kruskal's MST using DSU.
