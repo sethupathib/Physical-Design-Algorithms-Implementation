@@ -1,5 +1,8 @@
 # Metal Fill (FEOL / BEOL) — recursive-partitioned dummy fill
 
+> For a thorough design write-up (motivation, every algorithm, the partitioning
+> correctness argument, bugs fixed, and results) see **[WHITEPAPER.md](WHITEPAPER.md)**.
+
 A small, dependency-free C++17 engine that inserts **dummy metal fill** into a
 GDSII layout so that every layer meets CMP density rules. It processes the die by
 **recursive quadtree partitioning** (like commercial fill flows) so leaves can be
