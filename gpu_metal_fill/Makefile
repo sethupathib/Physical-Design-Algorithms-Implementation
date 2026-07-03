@@ -20,7 +20,8 @@ BUILD := build
 LIB_SRC := $(wildcard src/*.cpp)
 LIB_OBJ := $(patsubst src/%.cpp,$(BUILD)/%.o,$(LIB_SRC))
 
-TOOLS := $(BUILD)/make_dummy_gds $(BUILD)/make_gpu_block $(BUILD)/run_fill $(BUILD)/render_layer
+TOOLS := $(BUILD)/make_dummy_gds $(BUILD)/make_gpu_block $(BUILD)/run_fill $(BUILD)/render_layer \
+         $(BUILD)/gdsinfo
 TESTS := $(BUILD)/test_main
 
 .PHONY: all tools test demo clean
@@ -43,6 +44,9 @@ $(BUILD)/run_fill: tools/run_fill.cpp $(LIB_OBJ) | $(BUILD)
 	$(CXX) $(CXXFLAGS) $< $(LIB_OBJ) -o $@ $(LDFLAGS)
 
 $(BUILD)/render_layer: tools/render_layer.cpp $(LIB_OBJ) | $(BUILD)
+	$(CXX) $(CXXFLAGS) $< $(LIB_OBJ) -o $@ $(LDFLAGS)
+
+$(BUILD)/gdsinfo: tools/gdsinfo.cpp $(LIB_OBJ) | $(BUILD)
 	$(CXX) $(CXXFLAGS) $< $(LIB_OBJ) -o $@ $(LDFLAGS)
 
 $(BUILD)/test_main: tests/test_main.cpp $(LIB_OBJ) | $(BUILD)

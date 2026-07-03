@@ -68,6 +68,9 @@ build/make_gpu_block -o build/gpu_block.gds            # synthetic GPU block
 build/run_fill -i build/gpu_block.gds -o build/gpu_filled.gds -r build/report.txt
 build/render_layer -i build/gpu_filled.gds -o build/m1.ppm -l 10   # visualize M1
 # convert the PPM to PNG if you like: ffmpeg -i build/m1.ppm build/m1.png
+
+# confirm fill happened: per-(layer,datatype) polygon counts. Fill = datatype 10.
+build/gdsinfo build/gpu_block.gds build/gpu_filled.gds
 ```
 
 ### The GPU-block test design
@@ -101,7 +104,7 @@ work on every layer.
 | `backend.hpp`, `backend_cpu.cpp` | compute backend (CPU/OpenMP; CUDA later) |
 | `engine.{hpp,cpp}` | orchestration: partition → fill → iterate → merge |
 | `layermap.{hpp,cpp}` | default GDS layers + fill rules |
-| `tools/` | `make_dummy_gds`, `run_fill`, `render_layer` |
+| `tools/` | `make_dummy_gds`, `make_gpu_block`, `run_fill`, `render_layer`, `gdsinfo` |
 | `tests/test_main.cpp` | unit + end-to-end tests |
 
 The default layer map and rules are illustrative, **not** a real PDK; edit
