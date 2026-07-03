@@ -20,7 +20,7 @@ BUILD := build
 LIB_SRC := $(wildcard src/*.cpp)
 LIB_OBJ := $(patsubst src/%.cpp,$(BUILD)/%.o,$(LIB_SRC))
 
-TOOLS := $(BUILD)/make_dummy_gds $(BUILD)/run_fill $(BUILD)/render_layer
+TOOLS := $(BUILD)/make_dummy_gds $(BUILD)/make_gpu_block $(BUILD)/run_fill $(BUILD)/render_layer
 TESTS := $(BUILD)/test_main
 
 .PHONY: all tools test demo clean
@@ -34,6 +34,9 @@ $(BUILD)/%.o: src/%.cpp | $(BUILD)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(BUILD)/make_dummy_gds: tools/make_dummy_gds.cpp $(LIB_OBJ) | $(BUILD)
+	$(CXX) $(CXXFLAGS) $< $(LIB_OBJ) -o $@ $(LDFLAGS)
+
+$(BUILD)/make_gpu_block: tools/make_gpu_block.cpp $(LIB_OBJ) | $(BUILD)
 	$(CXX) $(CXXFLAGS) $< $(LIB_OBJ) -o $@ $(LDFLAGS)
 
 $(BUILD)/run_fill: tools/run_fill.cpp $(LIB_OBJ) | $(BUILD)
@@ -51,6 +54,10 @@ test: $(TESTS)
 demo: tools
 	$(BUILD)/make_dummy_gds -o $(BUILD)/dummy.gds
 	$(BUILD)/run_fill -i $(BUILD)/dummy.gds -o $(BUILD)/filled.gds -r $(BUILD)/report.txt
+
+gpu-demo: tools
+	$(BUILD)/make_gpu_block -o $(BUILD)/gpu_block.gds
+	$(BUILD)/run_fill -i $(BUILD)/gpu_block.gds -o $(BUILD)/gpu_filled.gds -r $(BUILD)/gpu_report.txt
 
 clean:
 	rm -rf $(BUILD)

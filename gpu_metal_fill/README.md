@@ -56,13 +56,30 @@ equivalent to a single-shot global fill.
 ```sh
 make            # builds tools into build/
 make test       # builds and runs the unit tests
-make demo       # generate dummy.gds -> filled.gds + report.txt
+make demo       # simple synthetic layout -> filled.gds + report.txt
+make gpu-demo   # realistic GPU-block layout -> gpu_filled.gds + gpu_report.txt
 
 # manual
-build/make_dummy_gds -o build/dummy.gds
-build/run_fill -i build/dummy.gds -o build/filled.gds -r build/report.txt
-build/render_layer -i build/filled.gds -o build/m3.ppm -l 12   # visualize M3
+build/make_gpu_block -o build/gpu_block.gds            # synthetic GPU block
+build/run_fill -i build/gpu_block.gds -o build/gpu_filled.gds -r build/report.txt
+build/render_layer -i build/gpu_filled.gds -o build/m1.ppm -l 10   # visualize M1
+# convert the PPM to PNG if you like: ffmpeg -i build/m1.ppm build/m1.png
 ```
+
+### The GPU-block test design
+
+`make_gpu_block` generates a synthetic — but structurally realistic — GPU block
+(it is **not** a real design, just the floorplan-level density structure):
+
+- an `NxN` grid of SM (streaming-multiprocessor) tiles, each with two SRAM
+  macros (register file + shared memory) and a standard-cell logic region,
+- routing channels between tiles (bus routing on mid metals),
+- global clock/spine routes (M9/M10), and
+- a regular, sparse power grid on the top metals (M11..M14).
+
+Each layer therefore has a distinct density profile — dense macros/logic on the
+lower layers, near-empty upper layers with only power straps — so fill has varied
+work on every layer.
 
 `make OPENMP=0` builds a serial version.
 
