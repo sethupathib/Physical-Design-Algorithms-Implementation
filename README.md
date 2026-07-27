@@ -7,6 +7,12 @@ Steps--
 1. Implement Kruskal's MST using DSU.
 2. Implement Steiner Tree using MST (A lot more complex than this).
 
+## [**RC Extraction (Signoff)**](./RC%20Extraction)
+
+C++ teaching extractor: layout geometry (GDS-like) → connectivity → R/C → SPEF → Elmore delay.
+
+How interconnect parasitics are obtained for physical-design signoff — not from the logical netlist, but from wire geometry + process stack.
+
 ## Case Study
 
 1. [**Register Clustering for Optimal PPA**](https://dl.acm.org/doi/10.1145/3299902.3309753) and [**ISPD Slides.**](http://ispd.cc/slides/2019/2_placement_GracefulReg.pdf)
@@ -15,5 +21,3 @@ Steps--
 
 P.S -- Prof. Yao Wen thinks that these are classical problems. I think it's good for me to start with these since I am very new to EDA and its implementation.
 Also, this project is still under development. It turned out to be a lot harder than I thought. (It will take time for me to fully implement this). I need to know about Line Sweeps and some Geometry Algorithms.
-
- 

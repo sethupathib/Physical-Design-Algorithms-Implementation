@@ -1,0 +1,15 @@
+# via_stack.lay — M1 → VIA1 → M2 → VIA2 → M3 route
+#
+# Teaches: via resistance, multi-layer connectivity (LVS-like stitching),
+#          π-model across layers for signoff SPEF.
+
+NAME via_stack
+
+METAL M1 netx m1 0.0 0.0 3.0 0.2
+VIA   VIA1 netx v1 2.80 0.03 2.94 0.17
+METAL M2 netx m2 2.5 0.0 6.0 0.25
+VIA   VIA2 netx v2 5.80 0.05 5.94 0.19
+METAL M3 netx m3 5.5 0.0 10.0 0.3
+
+PIN DRV:Z netx M1 O 0.1 0.1
+PIN LD:A  netx M3 I 9.9 0.15

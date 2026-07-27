@@ -1,0 +1,13 @@
+# coupled_nets.lay — two parallel M1 wires (victim / aggressor)
+#
+# Teaches: same-layer coupling capacitance Ccoup ≈ k * T * Lov / S
+
+NAME coupled_nets
+
+METAL M1 victim   v0 0.0 0.0 8.0 0.2
+METAL M1 aggressor a0 0.0 0.4 8.0 0.6
+
+PIN VDRV:Z victim    M1 O 0.1 0.1
+PIN VLD:A  victim    M1 I 7.9 0.1
+PIN ADRV:Z aggressor M1 O 0.1 0.5
+PIN ALD:A  aggressor M1 I 7.9 0.5
