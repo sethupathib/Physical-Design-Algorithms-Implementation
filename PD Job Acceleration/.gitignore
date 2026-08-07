@@ -1,6 +1,7 @@
 .bench_disk/
 examples/demo_durable/
 examples/demo_ram_scratch/
+examples/demo_perf_sync_job/
 examples/rcx_job_durable/
 examples/compare_results/
 examples/compare_metal_fill_results/

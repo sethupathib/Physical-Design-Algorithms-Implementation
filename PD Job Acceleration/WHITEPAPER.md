@@ -48,6 +48,8 @@ interviews.
 5. [Architecture: two modes](#5-architecture-two-modes)
 6. [tmpfs as the hot tier](#6-tmpfs-as-the-hot-tier)
 7. [rsync as the durability bus](#7-rsync-as-the-durability-bus)
+7a. [After rsync: shell `sync` for writeback durability](#7a-after-rsync-shell-sync-for-writeback-durability)
+7b. [perf: measure I/O vs CPU before you move data](#7b-perf-measure-io-vs-cpu-before-you-move-data)
 8. [Log policy: why fat logs must stay off RAM](#8-log-policy-why-fat-logs-must-stay-off-ram)
 9. [Safety, failure modes, and operational rules](#9-safety-failure-modes-and-operational-rules)
 10. [Implementation in this repository](#10-implementation-in-this-repository)
@@ -253,6 +255,68 @@ losing on shipping trash home.”
 
 ---
 
+## 7a. After rsync: shell `sync` for writeback durability
+
+**rsync ≠ durable on media.** rsync copies into the destination page cache.
+Until writeback is flushed, a node crash or abrupt NFS client death can erase a
+checkpoint that the orchestrator already logged as successful.
+
+This toolkit therefore pairs rsync with the shell **`sync`** command
+(`pd_durable_sync` in `pd_job_env.sh`):
+
+| `PD_SYNC_MODE` | Behavior |
+|---|---|
+| `off` | No flush (fastest; weakest crash claim) |
+| `file` | Write + `sync` a marker under `.pd_job_status/` |
+| `fs` (**default**) | `sync -f` on the filesystem containing the durable root |
+| `global` | Full-machine `sync` (avoid on busy farm nodes) |
+
+Defaults:
+
+- `PD_SYNC_AFTER_FINALIZE=1` — flush after final rsync / Mode B materialize.  
+- `PD_SYNC_AFTER_CHECKPOINT=0` — per-checkpoint flush is optional; on NFS it can
+  dominate wall time. Enable when the redo window matters more than farm load.
+
+This is complementary to the application-level `fsync` some tools already issue
+on DB saves. The orchestrator cannot assume every EDA binary does that for every
+artifact you care about.
+
+---
+
+## 7b. perf: measure I/O vs CPU before you move data
+
+**tmpfs helps I/O-dominated phases.** It does almost nothing for pure compute
+(timing graph walks, dense numerical kernels, many metal-fill CPU paths).
+Shipping a workspace into RAM without evidence wastes ops time and RAM quota.
+
+`scripts/pd_perf_profile.sh` wraps a command with:
+
+1. **`perf stat`** when a working `perf` binary exists (soft events always;
+   HW cycles/IPC when the PMU is exposed),  
+2. **GNU `time -v`** for major page faults, voluntary context switches, and
+   filesystem input/output counts,  
+3. a short **classification** (`I/O-bound` / `CPU-bound` / `Mixed`) and Mode A/B
+   recommendation in `SUMMARY.txt`.
+
+Enable in-line:
+
+```bash
+PD_PERF=1 PD_TOOL_CMD='...' ./scripts/ram_scratch.sh run
+# or
+./scripts/pd_perf_profile.sh --out logs/perf -- bash -c '...'
+```
+
+**What perf is not:** it is not I/O bandwidth isolation, and it is not a
+substitute for tmpfs. It is the measurement half of the loop:
+
+> profile → classify → place hot paths on tmpfs → rsync durability → `sync`
+> writeback → re-profile.
+
+Farm VMs often report `<not supported>` for HW counters; soft events plus
+`time -v` remain enough to catch “user+sys much less than wall” I/O wait patterns.
+
+---
+
 ## 8. Log policy: why fat logs must stay off RAM
 
 Commercial PD logs are append-heavy and frequently enormous. A 20 GB log in
@@ -295,7 +359,8 @@ This policy is a first-class design constraint, not an afterthought.
 4. Exclude regenerable junk from sync.  
 5. Trap signals; checkpoint long jobs.  
 6. Namespace `/dev/shm/pdjobs/$USER/$JOB`.  
-7. Measure whether the phase is CPU- or I/O-bound before promising speedup.
+7. Measure whether the phase is CPU- or I/O-bound (`pd_perf_profile.sh`) before promising speedup.  
+8. After finalize, flush writeback (`PD_SYNC_MODE=fs`) so durable media has the data.
 
 ---
 
@@ -305,12 +370,13 @@ This policy is a first-class design constraint, not an afterthought.
 
 | Script | Role |
 |---|---|
-| `scripts/pd_job_env.sh` | Shared defaults, rsync excludes, log rewiring |
+| `scripts/pd_job_env.sh` | Shared defaults, rsync excludes, log rewiring, `pd_durable_sync` |
 | `scripts/stage_to_tmpfs.sh` | Durable → tmpfs staging |
-| `scripts/checkpoint_sync.sh` | Incremental hot → durable sync |
-| `scripts/finalize_job.sh` | Final sync, `STATUS`, cleanup |
-| `scripts/run_pd_job.sh` | Mode A orchestrator |
+| `scripts/checkpoint_sync.sh` | Incremental hot → durable sync (+ optional `sync`) |
+| `scripts/finalize_job.sh` | Final sync, durability `sync`, `STATUS`, cleanup |
+| `scripts/run_pd_job.sh` | Mode A orchestrator (`PD_PERF=1` optional) |
 | `scripts/ram_scratch.sh` | Mode B hybrid scratch |
+| `scripts/pd_perf_profile.sh` | `perf` + GNU time I/O-vs-CPU classifier |
 | `scripts/bench_io.sh` | Disk vs tmpfs microbench |
 
 ### 10.2 Workloads used for evaluation
@@ -491,12 +557,15 @@ purpose.
    traces (e.g. `bpftrace`/`strace` histograms) would calibrate better.  
 2. **No automatic working-set sizing yet** — operators must estimate peak.  
 3. **Vendor tempfile paths** do not always honor `TMPDIR`; discovery via
-   `lsof`/`strace` is still manual.  
-4. **Multi-tenant fair sharing** of `/dev/shm` needs cgroup integration.  
+   `lsof`/`strace`/`perf` is still partly manual.  
+4. **Multi-tenant fair sharing** of `/dev/shm` needs cgroup integration
+   (true I/O bandwidth isolation is `io.max`, not `nice`/`ionice`).  
 5. **Integration with LSF/SGE/k8s** prologue/epilogue hooks is natural next
    packaging work.  
 6. **Optional local SSD tier** between NFS and tmpfs for fat logs and medium
-   scratch would complete a three-tier story.
+   scratch would complete a three-tier story.  
+7. **Richer `perf record`/`perf report` flame graphs** for phase-level
+   attribution (currently `perf stat` + classification; record is hinted).
 
 ---
 
@@ -508,8 +577,8 @@ control knob:
 
 - hot chatty I/O → RAM,  
 - fat logs / finals → disk,  
-- durability → deliberate rsync,  
-- claims → measured against CPU-bound and I/O-bound controls.
+- durability → deliberate rsync + writeback `sync`,  
+- claims → measured with `perf` / GNU time against CPU-bound and I/O-bound controls.
 
 Used carefully, it preserves correctness while removing a class of farm
 latency that no amount of Tcl reorganization can fix. Used carelessly
@@ -527,6 +596,7 @@ cd "PD Job Acceleration"
 # Demos (no EDA license)
 ./scripts/ram_scratch.sh --demo
 ./scripts/run_pd_job.sh --demo
+./examples/demo_perf_and_sync.sh
 
 # Real binaries
 ./examples/run_rcx_accelerated.sh
@@ -552,6 +622,10 @@ Environment knobs (selected):
 | `PD_FLUSH_ON_TEARDOWN` | Mode B materialize scratch | `1` |
 | `PD_EXCLUDE_FILE` | extra rsync excludes | empty |
 | `PD_TOOL_CMD` | command run in job cwd | required |
+| `PD_SYNC_MODE` | writeback flush mode after rsync | `fs` |
+| `PD_SYNC_AFTER_FINALIZE` | shell `sync` after finalize/flush | `1` |
+| `PD_SYNC_AFTER_CHECKPOINT` | shell `sync` after each checkpoint | `0` |
+| `PD_PERF` | wrap tool with `pd_perf_profile.sh` | `0` |
 
 ---
 
@@ -566,6 +640,8 @@ Environment knobs (selected):
 | **durable** | NFS/disk source of truth |
 | **checkpoint** | incremental rsync hot → durable |
 | **finalize** | last sync + status + cleanup |
+| **`sync`(1)** | flush kernel writeback to durable media (≠ rsync) |
+| **`perf`** | Linux performance counters / profiling toolkit |
 | **NFS RTT** | network round-trip time paid per remote op |
 | **ECO** | engineering change order iteration |
 | **SPEF** | Standard Parasitic Exchange Format |
@@ -578,3 +654,4 @@ Environment knobs (selected):
 | version | notes |
 |---|---|
 | 1.0 | Initial white paper aligned with `PD Job Acceleration` implementation, Mode A/B defaults, log policy, and farm I/O suite results |
+| 1.1 | Added `perf` profiling loop and shell `sync` durability after rsync |

@@ -174,7 +174,10 @@ flush_scratch() {
     fi
   done < <(rel_paths)
 
-  echo "flushed $(date -Iseconds)" >> "${PD_META_DIR}/flush.log"
+  if [[ "${PD_SYNC_AFTER_FINALIZE:-1}" == "1" ]]; then
+    pd_durable_sync "ram_scratch_flush"
+  fi
+  echo "flushed $(date -Iseconds) sync_mode=${PD_SYNC_MODE:-fs}" >> "${PD_META_DIR}/flush.log"
 }
 
 teardown_scratch() {
@@ -200,6 +203,9 @@ teardown_scratch() {
         mv "$material" "$durable_path"
         pd_log "Materialized ${rel}/ onto durable storage"
       done < <(rel_paths)
+      if [[ "${PD_SYNC_AFTER_FINALIZE:-1}" == "1" ]]; then
+        pd_durable_sync "ram_scratch_teardown"
+      fi
     fi
   else
     # Drop redirects; discard RAM contents.
@@ -230,10 +236,17 @@ run_with_scratch() {
   eval "$(print_env)"
 
   local rc=0
-  pd_log "Running tool with TMPDIR=$TMPDIR"
+  pd_log "Running tool with TMPDIR=$TMPDIR (PD_PERF=${PD_PERF:-0})"
   (
     cd "$PD_DURABLE_ROOT"
-    bash -c "$PD_TOOL_CMD"
+    if [[ "${PD_PERF:-0}" == "1" ]]; then
+      # Pass the tool string once — pd_perf_profile runs it via bash -c.
+      PD_DURABLE_ROOT="$PD_DURABLE_ROOT" PD_JOB_NAME="${PD_JOB_NAME:-scratch}" \
+        PD_TOOL_CMD="$PD_TOOL_CMD" \
+        "${SCRIPT_DIR}/pd_perf_profile.sh" --out "${PD_DURABLE_ROOT}/logs/perf_${PD_JOB_NAME:-scratch}"
+    else
+      bash -c "$PD_TOOL_CMD"
+    fi
   ) || rc=$?
 
   teardown_scratch

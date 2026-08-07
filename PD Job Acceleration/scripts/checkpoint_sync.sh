@@ -32,9 +32,15 @@ do_checkpoint() {
   # Prefer newer / changed files; keep partials if NFS hiccups mid-transfer.
   PD_RSYNC_OPTS="${PD_RSYNC_OPTS} --partial"
   pd_rsync "${PD_WORK_DIR}/" "${PD_DURABLE_ROOT}/"
+
+  # Optional: push writeback so a crash cannot silently lose this checkpoint.
+  # Default off — frequent sync on NFS can dominate; enable for long ECO jobs.
+  if [[ "${PD_SYNC_AFTER_CHECKPOINT:-0}" == "1" ]]; then
+    pd_durable_sync "checkpoint_${n}"
+  fi
   end=$(date +%s)
 
-  echo "checkpoint n=${n} $(date -Iseconds) duration_s=$((end - start))" \
+  echo "checkpoint n=${n} $(date -Iseconds) duration_s=$((end - start)) sync_after=${PD_SYNC_AFTER_CHECKPOINT:-0}" \
     | tee -a "${PD_STATUS_DIR}/checkpoints.log"
   pd_log "Checkpoint #$n done in $((end - start))s"
 }

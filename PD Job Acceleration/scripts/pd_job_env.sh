@@ -18,6 +18,17 @@ pd_job_defaults() {
   : "${PD_EXCLUDE_FILE:=}"
   : "${PD_TOOL_CMD:=}"
   : "${PD_DEMO:=0}"
+  # Durability flush after rsync (the shell `sync` command — not rsync).
+  #   off    — no fsync/sync (fastest; weaker crash durability)
+  #   file   — sync marker file under durable root (GNU sync FILE)
+  #   fs     — sync filesystem(s) containing durable root (GNU sync -f)
+  #   global — sync entire machine (heavy; avoid on busy farm nodes)
+  : "${PD_SYNC_MODE:=fs}"
+  : "${PD_SYNC_AFTER_CHECKPOINT:=0}"  # 1 = also sync after each checkpoint
+  : "${PD_SYNC_AFTER_FINALIZE:=1}"    # 1 = sync after final rsync (recommended)
+  # Optional tool wrapping: PD_PERF=1 runs the tool under pd_perf_profile.sh
+  : "${PD_PERF:=0}"
+  : "${PD_PERF_RECORD:=0}"
 
   PD_WORK_DIR="${PD_TMPFS_ROOT}/${PD_JOB_NAME}"
   PD_STATUS_DIR="${PD_DURABLE_ROOT}/.pd_job_status"
@@ -136,4 +147,97 @@ pd_rsync() {
 
   # shellcheck disable=SC2086
   rsync ${PD_RSYNC_OPTS} "${excl[@]}" "$src" "$dest"
+}
+
+# Push kernel writeback to durable media after rsync.
+# rsync only copies into the page cache unless the destination already fsynced;
+# without this, a node crash can lose a "successful" checkpoint.
+#
+# Usage: pd_durable_sync [reason]
+pd_durable_sync() {
+  local reason="${1:-manual}"
+  local mode="${PD_SYNC_MODE:-fs}"
+  local root="${PD_DURABLE_ROOT:-}"
+  local start end marker
+
+  case "$mode" in
+    off|0|no|none)
+      pd_log "durable sync skipped (PD_SYNC_MODE=${mode}) reason=${reason}"
+      return 0
+      ;;
+  esac
+
+  command -v sync >/dev/null 2>&1 || {
+    pd_log "WARN: sync(1) not found; cannot harden durability after ${reason}"
+    return 0
+  }
+
+  start=$(date +%s)
+  case "$mode" in
+    file)
+      [[ -n "$root" && -d "$root" ]] || {
+        pd_log "WARN: PD_DURABLE_ROOT missing for file sync; falling back to global sync"
+        sync
+        return 0
+      }
+      mkdir -p "${root}/.pd_job_status"
+      marker="${root}/.pd_job_status/last_sync_marker"
+      date -Iseconds >"$marker" 2>/dev/null || echo "synced" >"$marker"
+      # GNU sync FILE → fsync that file (and often enough for NFS client writeback).
+      if sync "$marker" 2>/dev/null; then
+        :
+      else
+        sync
+      fi
+      ;;
+    fs|filesystem)
+      if [[ -n "$root" && -e "$root" ]] && sync -f "$root" 2>/dev/null; then
+        :
+      elif [[ -n "$root" && -e "$root" ]] && sync "$root" 2>/dev/null; then
+        :
+      else
+        sync
+      fi
+      ;;
+    global|all)
+      sync
+      ;;
+    *)
+      pd_log "WARN: unknown PD_SYNC_MODE=${mode}; using fs"
+      if [[ -n "$root" && -e "$root" ]] && sync -f "$root" 2>/dev/null; then
+        :
+      else
+        sync
+      fi
+      ;;
+  esac
+  end=$(date +%s)
+  pd_log "durable sync (${mode}) after ${reason} in $((end - start))s"
+
+  if [[ -n "$root" ]]; then
+    mkdir -p "${root}/.pd_job_status"
+    echo "sync mode=${mode} reason=${reason} $(date -Iseconds)" \
+      >> "${root}/.pd_job_status/sync.log" 2>/dev/null || true
+  fi
+}
+
+# Resolve a usable perf binary (cloud images often ship a mismatched wrapper).
+pd_find_perf() {
+  local p cand
+  if [[ -n "${PD_PERF_BIN:-}" && -x "${PD_PERF_BIN}" ]]; then
+    printf '%s\n' "${PD_PERF_BIN}"
+    return 0
+  fi
+  for cand in \
+    "$(command -v perf 2>/dev/null || true)" \
+    /usr/lib/linux-tools-*/perf
+  do
+    [[ -n "$cand" && -x "$cand" ]] || continue
+    # Reject the stub that only prints "perf not found for kernel ..."
+    if "$cand" --version >/dev/null 2>&1; then
+      printf '%s\n' "$cand"
+      return 0
+    fi
+  done
+  return 1
 }

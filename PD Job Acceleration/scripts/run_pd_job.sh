@@ -31,6 +31,10 @@ Environment:
   PD_TMPFS_SIZE     Default 8G
   PD_KEEP_TMPFS=1   Keep RAM workspace after job
   PD_KEEP_LOGS_ON_DISK  Default 1 — logs/ stays on durable disk (not tmpfs)
+  PD_SYNC_MODE          off|file|fs|global — durability flush after rsync (default fs)
+  PD_SYNC_AFTER_FINALIZE  Default 1 — run shell sync after final rsync
+  PD_SYNC_AFTER_CHECKPOINT  Default 0 — sync after each checkpoint (costly on NFS)
+  PD_PERF=1             Wrap tool with pd_perf_profile.sh (I/O vs CPU report)
 
 Examples:
   ./scripts/run_pd_job.sh --demo
@@ -132,12 +136,18 @@ main() {
     PD_ORCH_CKPT_PID=$!
   fi
 
-  pd_log "Launching tool in workspace"
+  pd_log "Launching tool in workspace (PD_PERF=${PD_PERF:-0})"
   set +e
   (
     cd "$PD_WORK_DIR"
     # bash -c keeps quoted paths intact (e.g. directories with spaces).
-    bash -c "$PD_TOOL_CMD"
+    if [[ "${PD_PERF:-0}" == "1" ]]; then
+      PD_DURABLE_ROOT="$PD_DURABLE_ROOT" PD_JOB_NAME="$PD_JOB_NAME" \
+        PD_TOOL_CMD="$PD_TOOL_CMD" \
+        "${SCRIPT_DIR}/pd_perf_profile.sh" --out "${PD_LOG_DIR}/perf_${PD_JOB_NAME}"
+    else
+      bash -c "$PD_TOOL_CMD"
+    fi
   )
   PD_ORCH_TOOL_RC=$?
   set -e

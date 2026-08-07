@@ -107,9 +107,47 @@ measured that logs are small enough for tmpfs.
 | `scripts/stage_to_tmpfs.sh` | Durable → tmpfs staging |
 | `scripts/checkpoint_sync.sh` | Hot → durable incremental sync |
 | `scripts/finalize_job.sh` | Final sync + cleanup |
-| `scripts/pd_job_env.sh` | Shared helpers |
+| `scripts/pd_job_env.sh` | Shared helpers (`pd_durable_sync`, perf discovery) |
+| `scripts/pd_perf_profile.sh` | **perf** (+ GNU time) I/O-vs-CPU profile + Mode A/B advice |
 | `scripts/bench_io.sh` | Disk vs tmpfs microbench |
 | `scripts/demo_*.sh` | License-free demos |
+
+## perf — measure before you move data
+
+`perf` does not accelerate the job; it tells you **whether** tmpfs will help.
+
+```bash
+# Standalone profile of any command
+./scripts/pd_perf_profile.sh --out /tmp/pd_perf -- \
+  bash -c 'your_pd_tool ...'
+
+# Or wrap Mode A / Mode B
+PD_PERF=1 PD_DURABLE_ROOT=... PD_TOOL_CMD='...' ./scripts/ram_scratch.sh run
+```
+
+Output: `SUMMARY.txt` with classification (`I/O-bound` / `CPU-bound` / `Mixed`) and a
+Mode A/B recommendation. HW counters may be unavailable in VMs; soft events +
+GNU `time -v` still classify well.
+
+## `sync` — durability after rsync (not the same as rsync)
+
+**rsync** copies bytes into the destination filesystem. The shell **`sync`**
+command flushes kernel writeback so a crash cannot silently lose a “successful”
+checkpoint/finalize.
+
+| Knob | Default | Meaning |
+|---|---|---|
+| `PD_SYNC_MODE` | `fs` | `off` / `file` / `fs` / `global` |
+| `PD_SYNC_AFTER_FINALIZE` | `1` | sync after final rsync / Mode B flush |
+| `PD_SYNC_AFTER_CHECKPOINT` | `0` | sync every checkpoint (often costly on NFS) |
+
+Prefer `fs` (filesystem containing the durable root) over `global` on busy farm
+nodes. Enable checkpoint sync only when the redo window matters more than NFS load.
+
+```bash
+# Smoke demo: perf profile + Mode B + durable sync
+./examples/demo_perf_and_sync.sh
+```
 
 ## Safety rules
 
@@ -119,6 +157,8 @@ measured that logs are small enough for tmpfs.
 4. Exclude regenerable junk from sync when using Mode A.
 5. Trap `EXIT`/`TERM` so killed jobs still flush.
 6. On shared farms: `/dev/shm/pdjobs/$USER/$JOB` and enforce quotas.
+7. After finalize, **`sync`** (or `PD_SYNC_MODE=fs`) so durable media has the data.
+8. Profile with **`perf`** before claiming an I/O win — CPU-bound phases will not move.
 
 ## Real workload example (RC Extraction)
 
