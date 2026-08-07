@@ -4,7 +4,8 @@ Hands-on project: **how R & C are extracted from layout geometry** (the GDS-deri
 
 This is **strictly C++17**. No Python.
 
-Deep theory: [`docs/THEORY.md`](docs/THEORY.md)
+Deep theory: [`docs/THEORY.md`](docs/THEORY.md)  
+White paper (PDF): [`docs/RC_Extraction_Signoff_Whitepaper.pdf`](docs/RC_Extraction_Signoff_Whitepaper.pdf)
 
 ---
 
