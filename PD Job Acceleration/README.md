@@ -150,6 +150,16 @@ Same exercise on the BEOL metal-fill engine
 cat "PD Job Acceleration/examples/compare_metal_fill_results/SUMMARY.txt"
 ```
 
+### I/O-bound PD job (liberty vault + checkpoints)
+
+Synthetic but PD-shaped: tens of thousands of tiny liberty-like files with
+random lookups, fat DB checkpoints, report spam. Shows filesystem wins clearly.
+
+```bash
+./PD\ Job\ Acceleration/examples/compare_pd_io.sh
+cat "PD Job Acceleration/examples/compare_pd_io_results/SUMMARY.txt"
+```
+
 ## LinkedIn one-liner
 
 > Most PD turnaround time is not "the algorithm is slow" — it is "the filesystem is in the way."

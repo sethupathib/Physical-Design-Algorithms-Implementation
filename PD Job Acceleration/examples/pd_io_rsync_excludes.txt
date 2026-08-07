@@ -1,0 +1,7 @@
+# Regenerable hot scratch — do not ship home on finalize (outputs/ already has deliverables)
+tmp/lib_vault/
+tmp/reports/
+tmp/*.db
+tmp/*.bin
+tmp/*.lef.bin
+tmp/*.copy
