@@ -9,7 +9,7 @@ Steps--
 
 ## [**PERC Runtime Optimizer (C++)**](https://github.com/sethupathib/Physical-Design-Algorithms-Implementation/tree/main/PERC%20Runtime%20Optimizer)
 
-Programmable Electrical Rules Checking (ESD clamps, P2P resistance, CD-style path checks) with baseline vs ROI / hierarchical / incremental / parallel engines to study signoff runtime.
+Programmable Electrical Rules Checking (ESD clamps, P2P resistance, CD-style path checks) with baseline vs ROI / hierarchical / incremental / parallel engines to study signoff runtime. White paper: [`PERC_Runtime_Optimizer_Whitepaper.pdf`](https://github.com/sethupathib/Physical-Design-Algorithms-Implementation/blob/main/PERC%20Runtime%20Optimizer/docs/PERC_Runtime_Optimizer_Whitepaper.pdf).
 
 ## Case Study
 

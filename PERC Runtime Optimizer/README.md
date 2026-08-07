@@ -2,7 +2,10 @@
 
 Educational C++17 project: understand **PERC** (Programmable Electrical Rules Checking) in physical design, and measure algorithmic ways to cut runtime.
 
-See [docs/PERC_OVERVIEW.md](docs/PERC_OVERVIEW.md) for what PERC is and why signoff is slow.
+- **White paper (PDF):** [docs/PERC_Runtime_Optimizer_Whitepaper.pdf](docs/PERC_Runtime_Optimizer_Whitepaper.pdf)
+- Concept notes: [docs/PERC_OVERVIEW.md](docs/PERC_OVERVIEW.md)
+
+Regenerate the PDF: `python3 docs/generate_whitepaper.py` (requires `reportlab`).
 
 ## What is implemented
 
