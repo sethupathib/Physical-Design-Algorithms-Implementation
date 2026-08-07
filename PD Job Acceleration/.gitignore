@@ -2,3 +2,4 @@
 examples/demo_durable/
 examples/demo_ram_scratch/
 examples/rcx_job_durable/
+examples/compare_results/

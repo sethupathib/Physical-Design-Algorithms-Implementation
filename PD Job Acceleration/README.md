@@ -133,6 +133,13 @@ That job extracts `simple_net` / `coupled_nets` / `via_stack` / a generated
 `big_bus.lay`, writes SPEF under `outputs/`, logs under `logs/` (disk), and
 uses `tmp/` (+ `TMPDIR`) for scratch.
 
+Compare **with vs without** acceleration (same job, wall times + SPEF checksums):
+
+```bash
+./PD\ Job\ Acceleration/examples/compare_accel.sh
+cat "PD Job Acceleration/examples/compare_results/SUMMARY.txt"
+```
+
 ## LinkedIn one-liner
 
 > Most PD turnaround time is not "the algorithm is slow" — it is "the filesystem is in the way."
