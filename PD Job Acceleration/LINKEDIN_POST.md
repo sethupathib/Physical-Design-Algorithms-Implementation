@@ -5,54 +5,55 @@
 Most Physical Design turnaround time is not "the algorithm is slow."
 It is **"the filesystem is in the way."**
 
-PD tools (place → CTS → route → STA) hammer disk with LEF/DEF/libs/DBs,
-checkpoints, and logs — especially over NFS.
+But the fix is **not** "put everything in RAM."
 
-**Pattern that works in practice:**
+PD logs are often **20GB+**. Those stay on **local SSD**.
+What belongs in **tmpfs** is the small, chatty scratch (`tmp` / `TMPDIR`).
+Design DBs stay on disk/NFS unless you have measured that the whole tree fits.
 
-1. `rsync` the job tree into a **tmpfs** workspace (`/dev/shm/...`)
-2. Run Innovus / ICC2 / FC / STA **in RAM**
-3. Periodically `rsync` checkpoints back to durable NFS
-4. Final sync + cleanup on EXIT/TERM so kills still flush home
+**Pattern:**
 
-Same licenses. Same Tcl. Faster wall clock.
+1. Job dir on disk (DB + fat logs)
+2. Symlink only `tmp/` into `/dev/shm`
+3. Export `TMPDIR` into that scratch
+4. Run Innovus / ICC2 / FC as usual
+5. Teardown: materialize scratch home, free RAM
 
-I open-sourced a working demo (no EDA license needed) + orchestrator scripts:
-`PD Job Acceleration/` in this repo — `./scripts/run_pd_job.sh --demo`
+Same licenses. Same Tcl. Less I/O wait — without OOMing the node.
+
+Working scripts + demos: `PD Job Acceleration/`  
+`./scripts/ram_scratch.sh --demo`
 
 ---
 
 ## Longer technical version
 
 **Problem**
-On a typical farm, your "hot" working directory lives on NFS.
-Every tiny random read (liberty, DB pages) and every save pays network RTT.
-CPU cores wait. Licenses burn. Schedulers look "busy" while I/O stalls.
+Farms put hot working dirs on NFS. Tiny random I/O and tempfile spam pay RTT.
+CPU and licenses wait.
 
-**Approach — tmpfs as the hot tier, rsync as the durability bus**
+**Wrong fix**
+Staging a 20GB log into tmpfs. That is just a creative way to OOM.
 
+**Right fix (limited RAM)**
 ```
-NFS (cold, durable)  --rsync-->  tmpfs (hot)  --run tool-->
-                     <--rsync--  checkpoints / final outputs
+disk: DB + logs          RAM: tmp + TMPDIR only
+         ▲                      |
+         └──── flush on end ────┘
 ```
 
-**Why rsync (not cp)?**
-- Incremental checkpoints (only deltas after the first sync)
-- `--partial` survives flaky NFS mid-transfer
-- Exclude regenerable junk (`*.tmp`, caches) so you do not ship trash home
-- Easy to put on a timer while the tool runs
+**When you have spare RAM**
+You can stage the whole workspace into tmpfs and rsync checkpoints home —
+but still point huge logs at local SSD outside that tree.
 
-**Safety rules I always keep**
-- tmpfs is volatile — never the source of truth
-- Trap EXIT/INT/TERM → always finalize
-- Size RAM for peak working set + headroom, not just inputs
-- Namespace by user/job under `/dev/shm/pdjobs/$USER/$JOB`
+**Safety**
+- tmpfs is volatile
+- flush on EXIT/TERM
+- namespace `/dev/shm/pdjobs/$USER/$JOB`
+- measure before you redirect a path into RAM
 
-**Try the demo**
 ```bash
 cd "PD Job Acceleration"
-./scripts/run_pd_job.sh --demo
-./scripts/bench_io.sh 256    # disk vs tmpfs microbench on your host
+./scripts/ram_scratch.sh --demo    # hybrid (practical default)
+./scripts/run_pd_job.sh --demo     # full tree (only if it fits)
 ```
-
-If you run PNR / STA farms: happy to compare notes on what you exclude from sync and how you size tmpfs per block.
