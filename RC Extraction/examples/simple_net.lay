@@ -1,0 +1,12 @@
+# simple_net.lay — single driver→receiver wire on M1 (π-model demo)
+#
+#  U1:Z ──────────── 10 µm × 0.2 µm M1 ──────────── U2:A
+#
+# Teaches: R = Rs * L/W, Carea, Cfringe, Elmore delay.
+
+NAME simple_net
+
+METAL M1 clk w0 0.0 0.0 10.0 0.2
+
+PIN U1:Z clk M1 O 0.1 0.1
+PIN U2:A clk M1 I 9.9 0.1

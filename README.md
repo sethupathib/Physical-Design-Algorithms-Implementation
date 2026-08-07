@@ -13,6 +13,12 @@ Steps--
 2. [**Latch Clustering for Optimal PPA**](https://dl.acm.org/doi/abs/10.5555/3437539.3437769) and [**My Slides.**](https://github.com/sethupathib/Physical-Design-Algorithms-Implementation/blob/main/Register%20Clustering/Latch%20Clustering.pdf)
 3. [**GPU Accelerated STA**](http://yibolin.com/publications/papers/TIMER_ICCAD2020_Guo.pdf) and [**My Slides.**](https://github.com/sethupathib/Physical-Design-Algorithms-Implementation/tree/main/GPU%20-%20STA)
 
+## [**PD Job Acceleration (tmpfs + rsync)**](./PD%20Job%20Acceleration)
+
+Helpers to cut PD I/O wait: **Mode B** (default) keeps DB + fat logs on disk and only puts small `tmp`/`TMPDIR` in RAM; **Mode A** stages a full workspace into tmpfs when it fits (logs still stay on disk by default). License-free demos included.
+
+White paper: [`PD Job Acceleration/WHITEPAPER.md`](./PD%20Job%20Acceleration/WHITEPAPER.md) · [`PDF`](./PD%20Job%20Acceleration/docs/pd_tmpfs_rsync_whitepaper.pdf)
+
 P.S -- Prof. Yao Wen thinks that these are classical problems. I think it's good for me to start with these since I am very new to EDA and its implementation.
 Also, this project is still under development. It turned out to be a lot harder than I thought. (It will take time for me to fully implement this). I need to know about Line Sweeps and some Geometry Algorithms.
 
