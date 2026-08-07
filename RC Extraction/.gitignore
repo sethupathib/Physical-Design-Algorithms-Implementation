@@ -1,0 +1,6 @@
+*.o
+rcx_extract
+test_rc
+build/
+*.spef
+.DS_Store
