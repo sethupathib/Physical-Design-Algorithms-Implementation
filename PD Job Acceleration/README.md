@@ -140,6 +140,16 @@ Compare **with vs without** acceleration (same job, wall times + SPEF checksums)
 cat "PD Job Acceleration/examples/compare_results/SUMMARY.txt"
 ```
 
+### Metal fill (`gpu_metal_fill`)
+
+Same exercise on the BEOL metal-fill engine
+(`cursor/beol-metal-fill-partitioning-caf3/gpu_metal_fill`):
+
+```bash
+./PD\ Job\ Acceleration/examples/compare_metal_fill.sh
+cat "PD Job Acceleration/examples/compare_metal_fill_results/SUMMARY.txt"
+```
+
 ## LinkedIn one-liner
 
 > Most PD turnaround time is not "the algorithm is slow" — it is "the filesystem is in the way."
