@@ -5,3 +5,4 @@ examples/rcx_job_durable/
 examples/compare_results/
 examples/compare_metal_fill_results/
 examples/compare_pd_io_results/
+examples/compare_pd_farm_io_results/

@@ -160,6 +160,19 @@ random lookups, fat DB checkpoints, report spam. Shows filesystem wins clearly.
 cat "PD Job Acceleration/examples/compare_pd_io_results/SUMMARY.txt"
 ```
 
+### Monumental farm I/O suite (NFS RTT vs tmpfs)
+
+Multi-phase PD farm workload (liberty vault → random lookups → SPEF shards →
+ECO checkpoints → report spam). Baseline adds emulated **NFS per-op RTT**;
+Mode B/A run the same work on tmpfs with `nfs-us=0`.
+
+```bash
+./PD\ Job\ Acceleration/examples/compare_pd_farm_io.sh
+cat "PD Job Acceleration/examples/compare_pd_farm_io_results/SUMMARY.txt"
+```
+
+Example on this host (`NFS_US=400µs`): baseline **~115s** → Mode A **~2.3s (~50×)**.
+
 ## LinkedIn one-liner
 
 > Most PD turnaround time is not "the algorithm is slow" — it is "the filesystem is in the way."
