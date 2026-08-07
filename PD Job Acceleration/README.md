@@ -1,8 +1,10 @@
 # Accelerate Physical Design Jobs with tmpfs + rsync
 
+**White paper (detailed):** [`WHITEPAPER.md`](./WHITEPAPER.md) ·
+[`docs/pd_tmpfs_rsync_whitepaper.pdf`](./docs/pd_tmpfs_rsync_whitepaper.pdf)
+
 Physical Design tools are often **I/O-bound**, not just CPU-bound —
 especially over NFS (tiny random reads on libs/DB pages, chatty scratch).
-
 This folder has **two modes**. Pick by RAM budget.
 
 | Mode | When | What goes in RAM |
