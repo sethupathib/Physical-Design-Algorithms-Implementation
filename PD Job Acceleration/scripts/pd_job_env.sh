@@ -12,6 +12,8 @@ pd_job_defaults() {
   : "${PD_MOUNT_TMPFS:=auto}"   # auto | yes | no
   : "${PD_CHECKPOINT_SECS:=0}"  # 0 = disabled
   : "${PD_KEEP_TMPFS:=0}"       # 1 = leave workspace after finalize
+  # Fat PD logs often exceed 20GB — keep them on disk even in Mode A.
+  : "${PD_KEEP_LOGS_ON_DISK:=1}"
   : "${PD_RSYNC_OPTS:=-aH --human-readable --info=stats2}"
   : "${PD_EXCLUDE_FILE:=}"
   : "${PD_TOOL_CMD:=}"
@@ -82,16 +84,43 @@ pd_rsync_excludes() {
   # Regenerable / noisy PD artifacts — tune for your flow.
   args+=(
     --exclude='.pd_job_status/'
+    --exclude='.pd_ram_scratch/'
     --exclude='*.tmp'
     --exclude='*.swp'
     --exclude='core'
     --exclude='core.*'
     --exclude='.nfs*'
   )
+  # When logs live on durable disk (symlink from workspace), do not rsync them
+  # through tmpfs — avoids copying 20GB+ logs into / out of RAM.
+  # Use 'logs' not 'logs/': a workspace symlink named logs does not match 'logs/'.
+  if [[ "${PD_KEEP_LOGS_ON_DISK:-1}" == "1" ]]; then
+    args+=(--exclude='logs' --exclude='logs/***')
+  fi
   if [[ -n "${PD_EXCLUDE_FILE}" && -f "${PD_EXCLUDE_FILE}" ]]; then
     args+=(--exclude-from="$PD_EXCLUDE_FILE")
   fi
   printf '%s\0' "${args[@]}"
+}
+
+# After staging Mode A workspace: point logs/ at durable disk, not tmpfs.
+pd_rewire_logs_to_disk() {
+  if [[ "${PD_KEEP_LOGS_ON_DISK:-1}" != "1" ]]; then
+    pd_log "PD_KEEP_LOGS_ON_DISK=0 — logs may consume tmpfs (dangerous if huge)"
+    return 0
+  fi
+
+  # Durable logs must be a real directory — never a symlink (avoids cycles if a
+  # prior rsync wrongly copied workspace logs → durable).
+  if [[ -L "${PD_DURABLE_ROOT}/logs" ]]; then
+    pd_log "WARN: durable logs/ was a symlink; replacing with a real directory"
+    rm -f "${PD_DURABLE_ROOT}/logs"
+  fi
+  mkdir -p "${PD_DURABLE_ROOT}/logs"
+
+  rm -rf "${PD_WORK_DIR}/logs"
+  ln -s "${PD_DURABLE_ROOT}/logs" "${PD_WORK_DIR}/logs"
+  pd_log "logs/ → durable disk (${PD_DURABLE_ROOT}/logs); excluded from tmpfs rsync"
 }
 
 pd_rsync() {

@@ -15,7 +15,7 @@ Steps--
 
 ## [**PD Job Acceleration (tmpfs + rsync)**](./PD%20Job%20Acceleration)
 
-Stage Physical Design job workspaces into RAM (`tmpfs`), run tools against the hot tree, and `rsync` checkpoints back to durable NFS/disk. Includes a license-free demo and LinkedIn-ready writeup.
+Helpers to cut PD I/O wait: **Mode B** (default) keeps DB + fat logs on disk and only puts small `tmp`/`TMPDIR` in RAM; **Mode A** stages a full workspace into tmpfs when it fits (logs still stay on disk by default). License-free demos included.
 
 P.S -- Prof. Yao Wen thinks that these are classical problems. I think it's good for me to start with these since I am very new to EDA and its implementation.
 Also, this project is still under development. It turned out to be a lot harder than I thought. (It will take time for me to fully implement this). I need to know about Line Sweeps and some Geometry Algorithms.

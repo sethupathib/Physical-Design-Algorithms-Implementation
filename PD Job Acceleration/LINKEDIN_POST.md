@@ -43,8 +43,8 @@ disk: DB + logs          RAM: tmp + TMPDIR only
 ```
 
 **When you have spare RAM**
-You can stage the whole workspace into tmpfs and rsync checkpoints home —
-but still point huge logs at local SSD outside that tree.
+You can stage most of the workspace into tmpfs and rsync checkpoints home —
+but keep huge logs on disk (`PD_KEEP_LOGS_ON_DISK=1`, the default).
 
 **Safety**
 - tmpfs is volatile

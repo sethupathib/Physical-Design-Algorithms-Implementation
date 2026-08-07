@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-# Orchestrate a PD job: stage → (optional checkpoint loop) → run → finalize.
+# Mode A orchestrator: stage job tree into tmpfs → run → checkpoint → finalize.
+#
+# By default PD_KEEP_LOGS_ON_DISK=1: after staging, workspace logs/ is a symlink
+# to durable disk and logs/ are excluded from rsync. Fat PD logs must not fill RAM.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -16,6 +19,9 @@ usage() {
   cat <<'EOF'
 Usage: run_pd_job.sh [--demo] [--keep]
 
+Mode A: full workspace in tmpfs — only when the design/scratch fits in RAM.
+Prefer ram_scratch.sh (Mode B) when RAM is limited.
+
 Environment:
   PD_DURABLE_ROOT   Persistent job dir (required unless --demo)
   PD_JOB_NAME       Job name
@@ -24,10 +30,12 @@ Environment:
   PD_TMPFS_ROOT     Default /dev/shm/pdjobs/$USER
   PD_TMPFS_SIZE     Default 8G
   PD_KEEP_TMPFS=1   Keep RAM workspace after job
+  PD_KEEP_LOGS_ON_DISK  Default 1 — logs/ stays on durable disk (not tmpfs)
 
 Examples:
   ./scripts/run_pd_job.sh --demo
-  PD_DURABLE_ROOT=/proj/b/run1 PD_TOOL_CMD='innovus -files route.tcl' ./scripts/run_pd_job.sh
+  PD_DURABLE_ROOT=/proj/b/run1 PD_TOOL_CMD='innovus -files route.tcl -log logs/route.log' \
+    ./scripts/run_pd_job.sh
 EOF
 }
 
@@ -96,6 +104,7 @@ main() {
   pd_job_defaults
   [[ "$keep_flag" -eq 1 ]] && PD_KEEP_TMPFS=1
   export PD_KEEP_TMPFS PD_DURABLE_ROOT PD_JOB_NAME PD_TMPFS_ROOT PD_TMPFS_SIZE PD_MOUNT_TMPFS
+  export PD_KEEP_LOGS_ON_DISK PD_EXCLUDE_FILE PD_RSYNC_OPTS
 
   [[ -n "$PD_DURABLE_ROOT" ]] || { usage; pd_die "PD_DURABLE_ROOT required (or pass --demo)"; }
   [[ -n "$PD_TOOL_CMD" ]] || { usage; pd_die "PD_TOOL_CMD required (or pass --demo)"; }
@@ -109,11 +118,13 @@ main() {
   pd_log "durable: $PD_DURABLE_ROOT"
   pd_log "tmpfs:   $PD_WORK_DIR"
   pd_log "tool:    $PD_TOOL_CMD"
+  pd_log "keep_logs_on_disk=${PD_KEEP_LOGS_ON_DISK}"
 
   # Flush outputs home even if the job is killed.
   trap pd_orch_cleanup EXIT INT TERM
 
   "${SCRIPT_DIR}/stage_to_tmpfs.sh"
+  pd_rewire_logs_to_disk
 
   if [[ "${PD_CHECKPOINT_SECS}" =~ ^[0-9]+$ && "${PD_CHECKPOINT_SECS}" -gt 0 ]]; then
     pd_log "Starting checkpoint loop every ${PD_CHECKPOINT_SECS}s"

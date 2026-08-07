@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Synthetic Physical Design I/O workload for demos (no EDA license).
-# Mimics: read libs/LEF/DEF-ish inputs, write checkpoints, logs, reports.
+# Synthetic Physical Design I/O workload for Mode A demos (no EDA license).
+# Writes relative logs/ — with PD_KEEP_LOGS_ON_DISK=1 those hit durable disk
+# via symlink, not tmpfs.
 set -euo pipefail
 
 WORK_DIR="${1:-.}"

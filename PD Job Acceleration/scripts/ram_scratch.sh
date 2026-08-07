@@ -96,10 +96,10 @@ setup_scratch() {
       # Already redirected; ensure it points at our scratch.
       ln -sfn "$ram_target" "$durable_path"
     elif [[ -d "$durable_path" ]]; then
-      # Preserve any pre-existing durable logs, then replace dir with symlink.
+      # Preserve any pre-existing durable contents, then replace dir with symlink.
       backup="${PD_META_DIR}/backup_$(echo "$rel" | tr '/' '_')"
       mkdir -p "$backup"
-      # Copy existing content into RAM so the tool still sees prior logs.
+      # Copy existing content into RAM so the tool still sees prior files.
       rsync -a "${durable_path}/" "${ram_target}/"
       # Keep a durable backup copy, then swap in the symlink.
       rsync -a "${durable_path}/" "${backup}/"

@@ -7,7 +7,7 @@ This folder has **two modes**. Pick by RAM budget.
 
 | Mode | When | What goes in RAM |
 |---|---|---|
-| **A. Full workspace** (`run_pd_job.sh`) | Design + scratch **fits** in free RAM with headroom | Whole job tree |
+| **A. Full workspace** (`run_pd_job.sh`) | Design + scratch **fits** in free RAM with headroom | Job tree **except logs** (logs stay on disk by default) |
 | **B. Hybrid scratch** (`ram_scratch.sh`) | RAM is limited (usual case) | Only small `tmp` / `TMPDIR` |
 
 **Fat PD logs (often 10–50GB+) do not go in RAM** in either recommended setup.
@@ -64,24 +64,27 @@ Demo (no EDA license):
 
 ## Mode A — full workspace in tmpfs (only if it fits)
 
-Stage the whole durable tree into RAM, run there, `rsync` checkpoints home.
+Stage the durable tree into RAM, run there, `rsync` checkpoints home.
+**Logs still stay on disk by default** (`PD_KEEP_LOGS_ON_DISK=1`): after staging,
+`logs/` in the workspace is a symlink to the durable `logs/` directory and is
+excluded from rsync — so a 20GB tool log never lands in tmpfs.
 
 ```bash
 export PD_DURABLE_ROOT=/proj/chip/blockA/pnr_run42
 export PD_JOB_NAME=blockA_route_iter3
 export PD_TMPFS_SIZE=64G
-# Point the tool log at disk/SSD explicitly if the log is huge:
-export PD_TOOL_CMD='innovus -files run_route.tcl -log /local/ssd/logs/route.log'
+export PD_TOOL_CMD='innovus -files run_route.tcl -log logs/route.log'
 ./scripts/run_pd_job.sh
 ```
 
 Flow:
 
 1. Prepare workspace under `/dev/shm/pdjobs/<job>`
-2. `rsync` durable → tmpfs
-3. Run tool with cwd = tmpfs
-4. Optional periodic `rsync` checkpoints → durable
-5. Final `rsync`, write `STATUS`, cleanup
+2. `rsync` durable → tmpfs (**excluding `logs/`**)
+3. Rewire `logs/` → durable disk
+4. Run tool with cwd = tmpfs (relative `logs/...` hits disk)
+5. Optional periodic `rsync` checkpoints → durable
+6. Final `rsync`, write `STATUS`, cleanup
 
 Demo:
 
@@ -89,16 +92,16 @@ Demo:
 ./scripts/run_pd_job.sh --demo
 ```
 
-**Warning:** Mode A copies whatever is in the durable tree into RAM.
-Do not leave multi‑GB logs inside that tree if RAM is tight — log to local
-SSD outside the staged tree, or use Mode B.
+**Warning:** Mode A still needs the design DB + scratch to fit in RAM.
+If they do not, use Mode B. Set `PD_KEEP_LOGS_ON_DISK=0` only if you have
+measured that logs are small enough for tmpfs.
 
 ## Scripts
 
 | Script | Role |
 |---|---|
 | `scripts/ram_scratch.sh` | Mode B: small `tmp`/`TMPDIR` in RAM; logs stay on disk |
-| `scripts/run_pd_job.sh` | Mode A: full tree stage → run → checkpoint → finalize |
+| `scripts/run_pd_job.sh` | Mode A: full tree in tmpfs; **logs stay on disk by default** |
 | `scripts/stage_to_tmpfs.sh` | Durable → tmpfs staging |
 | `scripts/checkpoint_sync.sh` | Hot → durable incremental sync |
 | `scripts/finalize_job.sh` | Final sync + cleanup |
