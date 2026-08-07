@@ -65,15 +65,19 @@ Flow inside `run_pd_job.sh`:
 4. **Checkpoint** (optional timer) — rsync outputs tmpfs → durable
 5. **Finalize** — full rsync, write `STATUS`, unmount/cleanup
 
-## Limited RAM: logs/temp only (hybrid)
+## Limited RAM: small scratch only (hybrid)
 
 If you **cannot** fit the whole design DB in RAM, do **not** stage the full tree.
-Keep LEF/DEF/libs/DB on NFS/disk; put only **chatty, regenerable, or append-heavy**
-paths into a small `/dev/shm` scratch:
+Keep LEF/DEF/libs/DB on disk. Put only **small, short-lived, high-IOPS** scratch
+into `/dev/shm`.
+
+**Do not put PD logs in RAM by default.** Innovus/ICC2/FC logs are often **10–50GB+**.
+That will blow tmpfs and OOM the node. For fat logs:
+prefer **local SSD/NVMe** over NFS; use NFS only if you have no local disk.
 
 ```bash
 export PD_DURABLE_ROOT=/proj/chip/blockA/pnr_run42
-export PD_RAM_PATHS="logs tmp timing_tmp"   # relative dirs only
+export PD_RAM_PATHS="tmp"   # default — NOT logs
 export PD_TOOL_CMD='innovus -files run_route.tcl -log logs/route.log'
 ./scripts/ram_scratch.sh run
 ```
@@ -81,17 +85,21 @@ export PD_TOOL_CMD='innovus -files run_route.tcl -log logs/route.log'
 What it does:
 
 1. Creates `/dev/shm/pdjobs/$USER/<job>.scratch/`
-2. Replaces `logs/`, `tmp/`, … with **symlinks into RAM**
-3. Exports `TMPDIR` (and `TMP`/`TEMP`) into that scratch so libc/tempfile traffic hits RAM
-4. On teardown, **materializes** those dirs back onto durable disk and frees RAM
+2. Symlinks only `PD_RAM_PATHS` (default: `tmp/`) into RAM
+3. Exports `TMPDIR`/`TMP`/`TEMP` into that scratch
+4. On teardown, materializes those dirs back to disk and frees RAM
 
-Demo:
+Demo (DB + logs on disk, only `tmp` in RAM):
 
 ```bash
 ./scripts/ram_scratch.sh --demo
 ```
 
-**Rule of thumb:** RAM-tier = high IOPS / small files / throwaway. Disk-tier = large DBs and anything expensive to regenerate.
+| Tier | What belongs there |
+|---|---|
+| RAM (`tmpfs`) | Small regenerable scratch, `TMPDIR`, measured-small caches |
+| Local SSD | Huge logs, fat temp if scratch exceeds RAM budget |
+| NFS | Source inputs, final DBs you must keep, shared deliverables |
 
 ## Scripts
 
@@ -102,7 +110,7 @@ Demo:
 | `scripts/checkpoint_sync.sh` | Hot → durable incremental sync |
 | `scripts/finalize_job.sh` | Final sync + cleanup |
 | `scripts/run_pd_job.sh` | Orchestrator (stage → run → sync) |
-| `scripts/ram_scratch.sh` | Limited-RAM: redirect logs/tmp only |
+| `scripts/ram_scratch.sh` | Limited-RAM: small scratch/`TMPDIR` only (not fat logs) |
 | `scripts/demo_pd_workload.sh` | Synthetic PD I/O for demos / LinkedIn |
 | `scripts/bench_io.sh` | Quick disk vs tmpfs write/read microbench |
 

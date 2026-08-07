@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
-# Limited-RAM mode: keep the design on disk/NFS; put only logs + temp on tmpfs.
+# Limited-RAM mode: keep design + (usually) logs on disk; put small scratch in tmpfs.
+#
+# IMPORTANT: Do NOT put huge PD logs (often 10–50GB+) into RAM by default.
+# Prefer local SSD/NVMe for fat logs. RAM is for small, high-IOPS, short-lived
+# temp dirs / TMPDIR only — unless you have measured the log and it fits.
 #
 # Usage:
 #   ram_scratch.sh setup    # create RAM scratch + redirect paths
-#   ram_scratch.sh flush    # rsync RAM logs/tmp worth keeping → durable
+#   ram_scratch.sh flush    # rsync RAM scratch worth keeping → durable
 #   ram_scratch.sh teardown # flush + remove redirects + free RAM
 #   ram_scratch.sh env      # print export lines (TMPDIR, etc.) for the tool
 #   ram_scratch.sh --demo   # self-contained demo
@@ -13,7 +17,7 @@
 #   PD_JOB_NAME       Name slice under /dev/shm (default: scratch_<pid>)
 #   PD_SCRATCH_SIZE   Soft target for docs only; /dev/shm is shared RAM
 #   PD_RAM_PATHS      Space-separated relative dirs to put in RAM
-#                     default: "logs tmp timing_tmp"
+#                     default: "tmp"  (NOT logs — logs are often huge)
 #   PD_FLUSH_ON_TEARDOWN  1 (default) flush before removing RAM copies
 set -euo pipefail
 
@@ -23,7 +27,7 @@ ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 source "${SCRIPT_DIR}/pd_job_env.sh"
 
 : "${PD_TMPFS_ROOT:=/dev/shm/pdjobs/${USER:-user}}"
-: "${PD_RAM_PATHS:=logs tmp timing_tmp}"
+: "${PD_RAM_PATHS:=tmp}"
 : "${PD_FLUSH_ON_TEARDOWN:=1}"
 : "${PD_SCRATCH_SIZE:=2G}"
 
@@ -34,21 +38,23 @@ usage() {
   cat <<'EOF'
 Usage: ram_scratch.sh {setup|flush|teardown|env|run|--demo}
 
-Keep big design DBs on disk. Redirect only chatty paths into a small
-RAM scratch under /dev/shm, set TMPDIR, optionally flush logs home.
+Keep big design DBs and fat logs on disk. Redirect only small scratch
+paths into /dev/shm, and set TMPDIR there.
 
   setup      Create scratch + symlink PD_RAM_PATHS from durable → RAM
   flush      rsync selected RAM dirs back into durable (replace symlinks' targets)
   teardown   flush (default) + unlink redirects + rm scratch
   env        Print shell exports for the tool process
   run        setup, run PD_TOOL_CMD with TMPDIR in RAM, teardown
-  --demo     Fake job showing logs/tmp in RAM while "DB" stays on disk
+  --demo     DB+logs on disk; only tmp/TMPDIR in RAM
 
-Example:
+Example (default: tmp only — not logs):
   export PD_DURABLE_ROOT=/proj/blockA/run1
-  export PD_RAM_PATHS="logs tmp"
+  export PD_RAM_PATHS="tmp"          # add more only if sized + measured
   export PD_TOOL_CMD='innovus -files route.tcl -log logs/route.log'
   ./scripts/ram_scratch.sh run
+
+Fat logs (20GB+): keep on local SSD/NVMe, not tmpfs. NFS if you must.
 EOF
 }
 
@@ -129,8 +135,7 @@ print_env() {
 export TMPDIR="$tmp"
 export TMP="$tmp"
 export TEMP="$tmp"
-# Optional: point tool logs at the redirected durable-relative path, e.g.:
-#   -log logs/route.log
+# Keep tool logs on disk, e.g. -log logs/route.log (not in PD_RAM_PATHS).
 EOF
 }
 
@@ -245,25 +250,30 @@ demo() {
 
   export PD_DURABLE_ROOT="$durable"
   export PD_JOB_NAME="demo_ram_scratch"
-  export PD_RAM_PATHS="logs tmp"
+  export PD_RAM_PATHS="tmp"   # deliberately NOT logs
   export PD_TOOL_CMD="bash \"${SCRIPT_DIR}/demo_ram_scratch_workload.sh\""
 
-  pd_log "Demo durable tree: $durable (design.db stays on disk)"
+  pd_log "Demo durable tree: $durable (design.db + logs on disk; tmp in RAM)"
   run_with_scratch
 
   echo
   pd_log "After teardown:"
-  echo "  design.db size:          $(du -h "$durable/outputs/design.db" | awk '{print $1}') (on disk)"
-  echo "  logs/run.log size:       $(du -h "$durable/logs/run.log" | awk '{print $1}') (materialized)"
+  echo "  design.db size:     $(du -h "$durable/outputs/design.db" | awk '{print $1}') (disk)"
+  echo "  logs/run.log size:  $(du -h "$durable/logs/run.log" | awk '{print $1}') (disk, never RAM)"
   if [[ -L "$durable/logs" ]]; then
-    echo "  logs is symlink?         yes (unexpected after teardown)"
+    echo "  logs is symlink?    yes (WRONG — logs should stay on disk)"
   else
-    echo "  logs is symlink?         no (materialized directory on disk)"
+    echo "  logs is symlink?    no (good — logs stayed on disk)"
+  fi
+  if [[ -L "$durable/tmp" ]]; then
+    echo "  tmp is symlink?     yes (unexpected after teardown)"
+  else
+    echo "  tmp is symlink?     no (materialized after flush)"
   fi
   if [[ -d "${PD_TMPFS_ROOT}/demo_ram_scratch.scratch" ]]; then
-    echo "  RAM scratch remains?     yes"
+    echo "  RAM scratch remains? yes"
   else
-    echo "  RAM scratch remains?     no"
+    echo "  RAM scratch remains? no"
   fi
   echo
   echo "---- logs/run.log (tail) ----"
