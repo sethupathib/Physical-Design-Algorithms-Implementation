@@ -1,0 +1,14 @@
+# Extra excludes for PD checkpoint / finalize rsync.
+# Pass via: export PD_EXCLUDE_FILE=/path/to/this/file
+
+# Tool scratch / regenerable
+**/timing_tmp/**
+**/capo*tmp*
+**/*.drc.cache
+**/*CongestionMap*
+**/ezwave_tmp/**
+
+# Editor / OS noise
+**/.DS_Store
+**/Thumbs.db
+**/*~
