@@ -65,6 +65,34 @@ Flow inside `run_pd_job.sh`:
 4. **Checkpoint** (optional timer) — rsync outputs tmpfs → durable
 5. **Finalize** — full rsync, write `STATUS`, unmount/cleanup
 
+## Limited RAM: logs/temp only (hybrid)
+
+If you **cannot** fit the whole design DB in RAM, do **not** stage the full tree.
+Keep LEF/DEF/libs/DB on NFS/disk; put only **chatty, regenerable, or append-heavy**
+paths into a small `/dev/shm` scratch:
+
+```bash
+export PD_DURABLE_ROOT=/proj/chip/blockA/pnr_run42
+export PD_RAM_PATHS="logs tmp timing_tmp"   # relative dirs only
+export PD_TOOL_CMD='innovus -files run_route.tcl -log logs/route.log'
+./scripts/ram_scratch.sh run
+```
+
+What it does:
+
+1. Creates `/dev/shm/pdjobs/$USER/<job>.scratch/`
+2. Replaces `logs/`, `tmp/`, … with **symlinks into RAM**
+3. Exports `TMPDIR` (and `TMP`/`TEMP`) into that scratch so libc/tempfile traffic hits RAM
+4. On teardown, **materializes** those dirs back onto durable disk and frees RAM
+
+Demo:
+
+```bash
+./scripts/ram_scratch.sh --demo
+```
+
+**Rule of thumb:** RAM-tier = high IOPS / small files / throwaway. Disk-tier = large DBs and anything expensive to regenerate.
+
 ## Scripts
 
 | Script | Role |
@@ -74,6 +102,7 @@ Flow inside `run_pd_job.sh`:
 | `scripts/checkpoint_sync.sh` | Hot → durable incremental sync |
 | `scripts/finalize_job.sh` | Final sync + cleanup |
 | `scripts/run_pd_job.sh` | Orchestrator (stage → run → sync) |
+| `scripts/ram_scratch.sh` | Limited-RAM: redirect logs/tmp only |
 | `scripts/demo_pd_workload.sh` | Synthetic PD I/O for demos / LinkedIn |
 | `scripts/bench_io.sh` | Quick disk vs tmpfs write/read microbench |
 
