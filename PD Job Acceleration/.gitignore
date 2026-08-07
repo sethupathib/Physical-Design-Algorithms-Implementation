@@ -1,3 +1,4 @@
 .bench_disk/
 examples/demo_durable/
 examples/demo_ram_scratch/
+examples/rcx_job_durable/

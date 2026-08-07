@@ -118,6 +118,21 @@ measured that logs are small enough for tmpfs.
 5. Trap `EXIT`/`TERM` so killed jobs still flush.
 6. On shared farms: `/dev/shm/pdjobs/$USER/$JOB` and enforce quotas.
 
+## Real workload example (RC Extraction)
+
+There is **no metal-fill project on `main`**. The closest real PD binary in this
+repo family is **RC Extraction** (from `cursor/rc-extraction-signoff-6f4a`).
+
+```bash
+# from repo root — builds RC Extraction if needed, then runs Mode B
+./PD\ Job\ Acceleration/examples/run_rcx_accelerated.sh
+./PD\ Job\ Acceleration/examples/run_rcx_accelerated.sh --mode-a
+```
+
+That job extracts `simple_net` / `coupled_nets` / `via_stack` / a generated
+`big_bus.lay`, writes SPEF under `outputs/`, logs under `logs/` (disk), and
+uses `tmp/` (+ `TMPDIR`) for scratch.
+
 ## LinkedIn one-liner
 
 > Most PD turnaround time is not "the algorithm is slow" — it is "the filesystem is in the way."
