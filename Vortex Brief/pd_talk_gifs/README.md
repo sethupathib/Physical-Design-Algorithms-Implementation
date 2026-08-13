@@ -10,23 +10,30 @@ util → size → pins → power → macros → DRC → `defOut` / `saveDesign`
 python3 gen_floorplan_gif.py
 ```
 
-Clean frames use non-overlapping macros with clear channels. Frame `f06` intentionally abuts `SRAM0`/`SRAM1` for a **halo!** spacing violation; `f06b` restores the clean pack.
-
-Physical cells (endcap / welltap / decap) are **not** shown — mention verbally if needed.
-
 ## Placement — `placement_flow.gif`
 
-Starts from the finished floorplan, then:
-
-1. Global placement  
-2. HFNS (high-fanout buffer tree)  
-3. Detail placement  
-4. Legalization (on-row / site-aligned)  
-5. Density / congestion overlay  
-6. Timing optimization (WNS path → fix) → handoff to CTS  
+global → HFNS → detail → legal → density/congestion → timing opt → CTS
 
 ```bash
 python3 gen_placement_gif.py
 ```
 
-Writes `placement_frames/*.png` and `placement_flow.gif`.
+## CTS — `cts_flow.gif`
+
+cluster → balance → clock route → post-route conditioning → ID/skew/timing opt → Route
+
+```bash
+python3 gen_cts_gif.py
+```
+
+## Routing — `route_flow.gif`
+
+1. Global routing (G-cell corridors)  
+2. Track assignment  
+3. Detail routing (wires + vias)  
+4. DRC fix (short/spacing → clean)  
+5. Timing optimization → signoff handoff  
+
+```bash
+python3 gen_route_gif.py
+```
