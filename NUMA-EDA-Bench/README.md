@@ -23,12 +23,16 @@ This repo turns that into: theory → topology discovery → microbench → job 
 # 1) See your machine
 ./scripts/numa_report.sh
 
-# 2) Build bandwidth / latency microbench
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build -j
+# 2) Build bandwidth / latency microbench (Makefile path; needs g++)
+make -j
+
+# Optional CMake (set a full g++ toolchain if default c++ is clang without libstdc++):
+#   CXX=g++ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build -j
 
 # 3) Run bench (works even on 1-node VMs; on multi-node use numactl)
 ./build/numa_mem_bench --threads 4 --bytes 512M
+./scripts/compare_local_remote.sh   # unbound vs local vs remote when possible
+
 numactl --cpunodebind=0 --membind=0 ./build/numa_mem_bench --threads 4 --bytes 512M
 numactl --cpunodebind=0 --membind=1 ./build/numa_mem_bench --threads 4 --bytes 512M  # remote (multi-node)
 
@@ -36,6 +40,7 @@ numactl --cpunodebind=0 --membind=1 ./build/numa_mem_bench --threads 4 --bytes 5
 ./scripts/run_eda_numactl.sh 0 /path/to/fc_shell -f run.tcl
 ```
 
+**This cloud VM:** 1 NUMA node, no `numactl` package — the bench still runs; local-vs-remote contrast needs a real multi-socket farm box.
 ## Mental model
 
 ```
