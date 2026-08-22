@@ -9,8 +9,10 @@ No invented speedups on single-socket machines.
 |---|---|
 | Working code | `scripts/`, `src/`, `examples/`, `tools/` |
 | Detailed README | this file |
-| White paper | [`WHITEPAPER.md`](./WHITEPAPER.md) · [`docs/numa_fc_whitepaper.pdf`](./docs/numa_fc_whitepaper.pdf) |
-| Working GIF | [`demo/numa_fc_bind.gif`](./demo/numa_fc_bind.gif) |
+| White paper (illustrated) | [`WHITEPAPER.md`](./WHITEPAPER.md) · [`docs/numa_fc_whitepaper.pdf`](./docs/numa_fc_whitepaper.pdf) |
+| Working GIF (**checked into repo**) | [`demo/numa_fc_bind.gif`](./demo/numa_fc_bind.gif) |
+| Still frame | [`demo/numa_fc_bind_still.png`](./demo/numa_fc_bind_still.png) |
+| White-paper figures | [`docs/figures/`](./docs/figures/) |
 
 ---
 

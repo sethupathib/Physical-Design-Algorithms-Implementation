@@ -4,7 +4,7 @@ LDFLAGS  ?= -pthread
 BIN := build/numa_mem_bench
 SRC := src/numa_mem_bench.cpp
 
-.PHONY: all clean report compare gif pdf smoke
+.PHONY: all clean report compare gif figures pdf all-docs smoke
 
 all: $(BIN)
 
@@ -29,5 +29,10 @@ smoke: $(BIN)
 gif:
 	python3 demo/gen_gif.py
 
-pdf:
+figures:
+	python3 docs/gen_figures.py
+
+pdf: figures
 	python3 docs/build_whitepaper_pdf.py
+
+all-docs: gif figures pdf
