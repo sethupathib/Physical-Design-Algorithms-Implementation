@@ -35,11 +35,12 @@ This white paper presents a practical, license-preserving acceleration pattern:
    `--preferred` or resize the job/machine.
 
 We describe the Linux first-touch model, failure modes, a before/after harness
-modeled on the repository’s tmpfs+rsync experiments (including an **emulated
-remote DRAM tax** for single-node hosts), and how to defend the approach in
-design reviews and interviews. The central claim is not a new PD algorithm; it
-is that **memory placement is part of turnaround**, and that this can be made
-explicit, measurable, and operationally safe.
+modeled on the repository’s tmpfs+rsync experiments, and how to defend the
+approach in design reviews. An **emulated remote tax** exists only so single-node
+hosts can smoke-test the harness; those numbers are **not** results and must not
+be published as speedups. The central claim is not a new PD algorithm; it is that
+**memory placement is part of turnaround**, and that claims require topology plus
+measurement on real multi-socket silicon (or real tool wall time).
 
 ---
 
@@ -256,60 +257,59 @@ should cite a **hardware** run on a 2S/4S node.
 
 ## 9. Results
 
-### 9.1 This repository cloud host (1 NUMA node)
+### 9.0 Claims gate
 
-Environment at measurement time:
+| Mode | When | May you cite ratios publicly? |
+|---|---|---|
+| `hardware` | ≥2 NUMA nodes; remote `membind` vs local `membind`; median of ≥3 trials | Yes, as **microbench** (still not FC wall time) |
+| `emulated` | 1-node host; artificial `--emulate-remote` tax | **No** |
 
-- Host: cloud agent VM (`hostname=cursor`)
-- Topology: **1 socket / 1 NUMA node / 4 CPUs**
-- `numactl` vendored under `tools/numactl-root/`
-- Compare mode: **emulated** (remote DRAM tax)
-- Workload: `--bytes 512M --threads 4`
+Every run writes `examples/compare_results/CLAIM_GATE.txt`.
 
-Command:
+### 9.1 This repository cloud host (1 NUMA node) — harness smoke only
+
+Environment:
+
+- 1 socket / 1 NUMA node / 4 CPUs  
+- Mode: **emulated** → `CLAIM_GATE=DO_NOT_CITE`
+
+This host **cannot** measure remote DRAM. Running `compare_numa.sh` here only
+proves the harness runs. Triad especially is noisy on shared VMs (AFTER triad
+can land below BEFORE even when latency metrics move the expected way). That is
+measurement noise, not an anti-NUMA result, and not a publishable win.
+
+**Do not copy emulated SUMMARY ratios into LinkedIn, slides, or customer mail.**
+
+### 9.2 What a citeable hardware result looks like
+
+On a real dual-socket machine, re-run:
 
 ```bash
-./examples/compare_numa.sh
+TRIALS=5 BYTES=1G THREADS=$(nproc) ./examples/compare_numa.sh
+cat examples/compare_results/CLAIM_GATE.txt   # must say CITEABLE=yes
+cat examples/compare_results/SUMMARY.txt
 ```
 
-Measured results (see also `examples/compare_results/SUMMARY.txt`):
+Replace this section with that SUMMARY (and ideally FC stage wall time +
+`numastat -p`). Until then, this paper’s “result” is the **methodology**, not a
+farm speedup number.
 
-| config | triad (GiB/s) | chase (ns) | graph (ns) | wall_proxy |
-|---|---:|---:|---:|---:|
-| BEFORE emulated remote (bw×0.55, lat×1.75) | 54.0 | 194.1 | 102.6 | 31.5 |
-| AFTER local / `membind=0` | 68.7 | 116.9 | 13.8 | 14.5 |
+Order-of-magnitude expectations from literature / field practice (not measured
+here):
 
-| ratio | value |
-|---|---:|
-| AFTER/BEFORE triad | **1.27×** |
-| BEFORE/AFTER chase | **1.66×** |
-| BEFORE/AFTER graph | **7.4×** |
-| BEFORE/AFTER wall_proxy | **2.17×** |
-
-Interpretation: on this 1-node host the AFTER leg is native local DRAM; the
-BEFORE leg applies the labeled remote tax. The harness and summary format are
-what you re-run on a **2S farm** to replace these with hardware remote-vs-local
-numbers. Do not cite the emulated ratios as silicon UPI measurements.
-
-### 9.2 Expected hardware shape (2S farm)
-
-On a real dual-socket machine, literature and field practice typically show:
-
-| Metric | Remote vs local (order of magnitude) |
+| Metric | Remote vs local (typical shape) |
 |---|---|
-| STREAM-like bandwidth | remote often ~0.5–0.8× local under load |
-| Pointer-chase latency | remote > local (tens of % to 2× depending on platform) |
-| FC stage wall time | win when the stage was interconnect-bound and RSS fits |
-
-Re-run `./examples/compare_numa.sh` on farm silicon and replace §9.1 numbers
-in review decks.
+| STREAM-like bandwidth | remote often lower under load |
+| Pointer-chase latency | remote higher |
+| FC stage wall time | improves only if the stage was interconnect-bound and RSS fits |
 
 ### 9.3 How to read `SUMMARY.txt`
 
-- **triad** — higher better  
+- **triad** — higher better (bandwidth); check **triad spread** across trials  
 - **chase_ns / graph_ns** — lower better  
-- **wall_proxy** — lower better  
-- Ratios labeled AFTER/BEFORE or BEFORE/AFTER accordingly
+- **wall_proxy** — synthetic composite only; **never** call it FC wall-clock  
+- Ratios are labeled AFTER/BEFORE or BEFORE/AFTER accordingly  
+- If `DO_NOT_CITE` is present, stop — do not publish
 
 ---
 

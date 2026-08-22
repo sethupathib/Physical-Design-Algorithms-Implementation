@@ -1,1 +1,1 @@
-{"threads":4,"bytes":536870912,"numa_nodes":1,"emulate_remote":false,"remote_bw_mult":1.0000,"remote_lat_mult":1.0000,"triad_gib_s":68.696669,"chase_ns":116.920803,"graph_ns":13.800075,"wall_proxy":14.527762,"affinity":"0,1,2,3"}
+{"threads": 4, "bytes": 536870912, "numa_nodes": 1, "emulate_remote": false, "remote_bw_mult": 1.0, "remote_lat_mult": 1.0, "triad_gib_s": 74.619481, "chase_ns": 112.694135, "graph_ns": 12.951109, "wall_proxy": 13.980398, "affinity": "0,1,2,3", "trials": 3, "aggregate": "median"}

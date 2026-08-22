@@ -2,7 +2,17 @@
 
 **White paper:** [`WHITEPAPER.md`](./WHITEPAPER.md) · [`docs/numa_fc_whitepaper.pdf`](./docs/numa_fc_whitepaper.pdf)
 
-> Pin FC to one NUMA node’s cores **and** bind memory to that same node.
+## Claims policy (read first)
+
+| Allowed to publish as a result | Not allowed |
+|---|---|
+| Hardware mode on a **≥2 NUMA node** host: remote `membind` vs local `membind` (median of ≥3 trials) | Emulated-mode ratios from a 1-node VM/cloud box |
+| Real FC/Innovus stage wall time + `numastat` on farm silicon | Quoting `wall_proxy` as if it were FC wall-clock |
+| Mechanism explanation + the `numactl` recipe | “X× faster” without topology + measurement attached |
+
+`examples/compare_results/CLAIM_GATE.txt` is written every run: `CITEABLE=yes` or `DO_NOT_CITE`.
+
+> Pin FC to one NUMA node’s cores **and** bind memory to that same node — **when the working set fits that node’s free RAM.**
 
 This project is the **memory-locality** twin of [`PD Job Acceleration`](../PD%20Job%20Acceleration/) (tmpfs + rsync).  
 That one attacks **filesystem** placement. This one attacks **DRAM** placement on multi-socket servers.
@@ -18,26 +28,27 @@ That one attacks **filesystem** placement. This one attacks **DRAM** placement o
 cd NUMA-EDA-Bench
 ./scripts/numa_report.sh
 make -j
-./examples/compare_numa.sh
+TRIALS=3 ./examples/compare_numa.sh
 cat examples/compare_results/SUMMARY.txt
+cat examples/compare_results/CLAIM_GATE.txt
 ```
 
 What you get:
 
 | Artifact | Meaning |
 |---|---|
-| `examples/compare_results/SUMMARY.txt` | BEFORE vs AFTER table + speedup ratios |
-| `*.json` | machine-readable triad / chase / graph / wall_proxy |
-| `*.log` | full human bench output |
+| `SUMMARY.txt` | BEFORE vs AFTER (median of `TRIALS`) + claim gate language |
+| `CLAIM_GATE.txt` | `CITEABLE=yes` only in hardware mode |
+| `*.json` / `*.trials.jsonl` | median + raw trials (check triad spread) |
 
 ### Two compare modes (auto-selected)
 
-| Host | Mode | BEFORE | AFTER |
-|---|---|---|---|
-| **≥2 NUMA nodes** + `numactl` | `hardware` | `cpunodebind=0 --membind=1` (remote) | `cpunodebind=0 --membind=0` (local) |
-| **1 NUMA node** (this cloud VM) | `emulated` | `--emulate-remote` DRAM tax | local / `membind=0` |
+| Host | Mode | BEFORE | AFTER | Cite? |
+|---|---|---|---|---|
+| **≥2 NUMA nodes** + `numactl` | `hardware` | `membind=1` (remote) | `membind=0` (local) | **Yes** (microbench, not FC) |
+| **1 NUMA node** | `emulated` | artificial remote tax | local | **No** — harness smoke only |
 
-Emulated mode is the same idea as `NFS_US` in the PD farm I/O suite: a **labeled model** of the farm penalty so you can exercise the harness when the hardware topology is single-node. On a real 2S/4S box you get hardware numbers.
+Emulated mode exists so you can debug the harness without a 2S box. It is **not** a farm result. Do not post those ratios.
 
 Knobs:
 

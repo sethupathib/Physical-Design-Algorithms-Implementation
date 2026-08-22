@@ -1,4 +1,8 @@
+---- before_emulated_remote (3 trials → median) ----
 cmd: /workspace/NUMA-EDA-Bench/build/numa_mem_bench --bytes 512M --threads 4 --stream-iters 5 --chase-iters 8000000 --graph-iters 4000000 --emulate-remote --remote-bw-mult 0.55 --remote-lat-mult 1.75
-{"threads":4,"bytes":536870912,"numa_nodes":1,"emulate_remote":true,"remote_bw_mult":0.5500,"remote_lat_mult":1.7500,"triad_gib_s":54.020112,"chase_ns":194.142067,"graph_ns":102.576174,"wall_proxy":31.522986,"affinity":"0,1,2,3"}
-  triad=54.020 GiB/s  chase=194.14 ns  graph=102.58 ns  wall_proxy=31.52
+  trial 1/3...
+  trial 2/3...
+  trial 3/3...
+  median triad=54.223 GiB/s  chase=200.27 ns  graph=102.94 ns  wall_proxy=32.14  (n=3)
   emulate_remote=True  affinity=0,1,2,3  numa_nodes=1
+  triad spread: min=53.002  median=54.223  max=59.113

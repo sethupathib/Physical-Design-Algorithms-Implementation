@@ -1,0 +1,3 @@
+{"threads":4,"bytes":536870912,"numa_nodes":1,"emulate_remote":true,"remote_bw_mult":0.5500,"remote_lat_mult":1.7500,"triad_gib_s":53.002467,"chase_ns":200.265847,"graph_ns":102.227826,"wall_proxy":32.136072,"affinity":"0,1,2,3"}
+{"threads":4,"bytes":536870912,"numa_nodes":1,"emulate_remote":true,"remote_bw_mult":0.5500,"remote_lat_mult":1.7500,"triad_gib_s":59.113080,"chase_ns":201.446518,"graph_ns":103.990652,"wall_proxy":32.235390,"affinity":"0,1,2,3"}
+{"threads":4,"bytes":536870912,"numa_nodes":1,"emulate_remote":true,"remote_bw_mult":0.5500,"remote_lat_mult":1.7500,"triad_gib_s":54.222963,"chase_ns":194.351626,"graph_ns":102.938511,"wall_proxy":31.573251,"affinity":"0,1,2,3"}
