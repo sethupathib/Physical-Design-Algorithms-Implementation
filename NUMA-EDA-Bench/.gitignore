@@ -1,4 +1,5 @@
 build/
+demo/frames/
 *.o
 *.out
 results/*.txt
