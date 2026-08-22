@@ -108,19 +108,23 @@ refuses to write a fake SUMMARY. That is intentional.
 
 ## GIF
 
-`demo/numa_fc_bind.gif` — mechanism story:
+**Checked into git:** [`demo/numa_fc_bind.gif`](./demo/numa_fc_bind.gif)
+
+Mechanism story (every frame badged *mechanism · not a benchmark*):
 
 1. Dual-socket topology  
 2. Unbound failure mode (remote fills)  
 3. Types the `numactl` policy  
 4. Bound / local  
-5. Takeaway (measure on real 2S/4S silicon)
+5. Takeaway — measure on real 2S/4S silicon  
 
-Badge on every frame: **mechanism · not a benchmark**.  
 No fake percentage meters.
 
 ```bash
-make gif
+make gif          # regenerate GIF
+make figures      # white-paper PNGs + live terminal demos
+make pdf          # illustrated PDF (~docs/numa_fc_whitepaper.pdf)
+make all-docs     # gif + figures + pdf
 ```
 
 ---
