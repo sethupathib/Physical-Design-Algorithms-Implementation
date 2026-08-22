@@ -1,1 +1,0 @@
-{"threads": 4, "bytes": 536870912, "numa_nodes": 1, "emulate_remote": true, "remote_bw_mult": 0.55, "remote_lat_mult": 1.75, "triad_gib_s": 54.222963, "chase_ns": 200.265847, "graph_ns": 102.938511, "wall_proxy": 32.136072, "affinity": "0,1,2,3", "trials": 3, "aggregate": "median"}

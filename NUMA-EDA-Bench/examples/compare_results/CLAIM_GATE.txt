@@ -1,2 +1,2 @@
 CITEABLE=no
-DO_NOT_CITE=emulated_or_single_node
+REASON=single_numa_node
