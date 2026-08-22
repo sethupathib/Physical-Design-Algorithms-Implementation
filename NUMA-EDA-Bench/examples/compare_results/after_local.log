@@ -1,0 +1,4 @@
+cmd: /workspace/NUMA-EDA-Bench/tools/numactl-root/usr/bin/numactl --cpunodebind=0 --membind=0 /workspace/NUMA-EDA-Bench/build/numa_mem_bench --bytes 512M --threads 4 --stream-iters 5 --chase-iters 8000000 --graph-iters 4000000
+{"threads":4,"bytes":536870912,"numa_nodes":1,"emulate_remote":false,"remote_bw_mult":1.0000,"remote_lat_mult":1.0000,"triad_gib_s":68.696669,"chase_ns":116.920803,"graph_ns":13.800075,"wall_proxy":14.527762,"affinity":"0,1,2,3"}
+  triad=68.697 GiB/s  chase=116.92 ns  graph=13.80 ns  wall_proxy=14.53
+  emulate_remote=False  affinity=0,1,2,3  numa_nodes=1

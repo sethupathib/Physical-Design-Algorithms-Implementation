@@ -5,3 +5,5 @@ demo/frames/
 results/*.txt
 results/*.log
 .DS_Store
+# keep SUMMARY.txt + json; ignore bulky per-run logs if desired
+# examples/compare_results/*.log

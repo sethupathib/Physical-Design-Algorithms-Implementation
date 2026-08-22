@@ -1,0 +1,20 @@
+========================================================================
+NUMA policy — WITH vs WITHOUT (FC-class memory microbench)
+mode=emulated  nodes=1  bytes=512M  threads=4
+========================================================================
+config                                                  triad    chase    graph     wall
+------------------------------------------------------------------------
+BEFORE emulated remote (bw x 0.55, lat x 1.75)         54.020   194.14   102.58    31.52
+AFTER  local / membind=0                               68.697   116.92    13.80    14.53
+------------------------------------------------------------------------
+AFTER/BEFORE triad (higher better)                      1.272x
+BEFORE/AFTER chase (higher = after faster)              1.660x
+BEFORE/AFTER graph (higher = after faster)              7.433x
+BEFORE/AFTER wall_proxy (higher = after better)         2.170x
+------------------------------------------------------------------------
+NOTE: This host has 1 NUMA node. BEFORE uses labeled remote-DRAM
+emulation (same idea as NFS_US in PD Job Acceleration). On a real
+2S/4S box, re-run to get HARDWARE local vs remote numbers.
+wall_proxy is a composite (lower = better turnaround proxy).
+Functional work is identical; only memory policy / tax differs.
+========================================================================
