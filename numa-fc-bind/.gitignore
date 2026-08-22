@@ -5,3 +5,4 @@ examples/compare_results/*
 !examples/compare_results/README.md
 .DS_Store
 *.o
+__pycache__/
