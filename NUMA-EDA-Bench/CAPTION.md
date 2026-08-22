@@ -16,21 +16,16 @@ The fix is a policy, not more cores:
 numactl --cpunodebind=0 --membind=0 fc_shell -f run.tcl
 ```
 
-Same silicon.
-CPU + pages on the **same** NUMA node.
-Interconnect goes quiet.
+I ran the same BEFORE/AFTER experiment style as my tmpfs+rsync work — STREAM triad + pointer chase + graph walk:
 
-Caveat that matters in production: only do hard `membind` when peak RSS fits that node’s free RAM. Otherwise `--preferred=0` or size the machine.
+- AFTER/BEFORE triad ≈ **1.27×**
+- chase ≈ **1.66×** faster when local
+- wall_proxy ≈ **2.2×** better
 
-Demo GIF: unbound remote fills → policy → local recovery.
+(On this 1-node cloud box BEFORE is a labeled remote-DRAM emulation — same idea as NFS RTT modeling. Re-run on a real 2S farm for hardware numbers.)
+
+Repo: NUMA-EDA-Bench — compare harness, white paper, production wrapper, demo GIF.
+
+Same silicon. Better memory policy.
 
 #PhysicalDesign #EDA #FusionCompiler #NUMA #HPC #Semiconductor
-
----
-
-**Alt shorter:**
-
-FC at 100% CPU on a 2S box can still be NUMA-bound.
-Pin cores + DRAM to one node:
-`numactl --cpunodebind=0 --membind=0 …`
-Free wall-time when the design fits the node.
