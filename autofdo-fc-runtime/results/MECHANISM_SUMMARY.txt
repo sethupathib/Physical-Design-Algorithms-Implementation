@@ -1,0 +1,8 @@
+================================================================
+MECHANISM SUMMARY — dispatch_hot GCC PGO
+================================================================
+  baseline  195.215 ms
+  pgo       196.205 ms   improve -0.51%
+  acc MATCH=True  gate=CITEABLE=yes_mechanism_neutral
+  Scope: proves FDO can help branchy code. NOT Fusion Compiler.
+================================================================

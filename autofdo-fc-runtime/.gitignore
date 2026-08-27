@@ -1,0 +1,12 @@
+build/
+results/*.json
+results/*.jsonl
+results/*.time
+__pycache__/
+*.pyc
+*.gcda
+*.gcno
+.DS_Store
+*.profraw
+*.profdata
+perf.data

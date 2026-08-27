@@ -1,0 +1,14 @@
+# Keep measured summaries; ignore run noise.
+*
+!.gitignore
+!SUMMARY.txt
+!CLAIM_GATE.txt
+!MECHANISM_SUMMARY.txt
+!MECHANISM_CLAIM_GATE.txt
+!summary.json
+!baseline.json
+!pgo.json
+!autofdo.json
+!mech_baseline.json
+!mech_pgo.json
+!loc.txt
