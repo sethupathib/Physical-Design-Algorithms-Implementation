@@ -1,0 +1,8 @@
+*
+!.gitignore
+!SUMMARY.txt
+!CLAIM_GATE.txt
+!summary.json
+!loc.txt
+!adhoc.stdout
+!adhoc_naive.stdout

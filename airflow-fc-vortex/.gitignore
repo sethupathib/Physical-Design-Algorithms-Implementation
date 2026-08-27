@@ -1,0 +1,9 @@
+results/adhoc/
+results/adhoc_naive/
+results/runner/
+results/*.stdout
+results/*.time
+__pycache__/
+*.pyc
+.DS_Store
+.airflow/

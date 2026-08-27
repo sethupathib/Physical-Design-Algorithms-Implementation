@@ -1,0 +1,51 @@
+# Shared design-health policy (Vortex-style). Edit rules here — not in DAG code.
+version: 1
+policy_name: design_health_v1
+description: Seven rules for post-FC log forensics.
+
+defaults:
+  context_lines: 1
+  case_sensitive: false
+
+rules:
+  - name: setup_violation
+    severity: error
+    pattern: 'VIOLATED.*\bsetup\b|Setup\s+slack\s+-\d'
+    count_threshold: 0
+    note: Timing setup fails.
+
+  - name: hold_violation
+    severity: error
+    pattern: 'VIOLATED.*\bhold\b|Hold\s+slack\s+-\d'
+    count_threshold: 0
+    note: Timing hold fails.
+
+  - name: max_transition
+    severity: warning
+    pattern: 'max_transition|MaxTran|MAXTRAN'
+    count_threshold: 10
+    note: Noise floor for MaxTran.
+
+  - name: drc_error
+    severity: error
+    pattern: '\bDRC\b.*(error|violation|fail)|ERROR:\s*DRC'
+    count_threshold: 0
+    note: Hard DRC.
+
+  - name: antenna
+    severity: warning
+    pattern: '\bANTENNA\b|antenna\s+violation'
+    count_threshold: 5
+    note: Antenna noise floor.
+
+  - name: congestion_hotspot
+    severity: warning
+    pattern: 'Congestion\s*>\s*0\.(8|9)|Overflow\s*>\s*[5-9]\d'
+    count_threshold: 0
+    note: Routing hotspots.
+
+  - name: fatal_or_abort
+    severity: fatal
+    pattern: '\bFATAL\b|\bABORT\b|stack\s+trace|INTERNAL\s+ERROR'
+    count_threshold: 0
+    note: Tool death — stop the line.
