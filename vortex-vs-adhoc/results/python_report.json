@@ -1,0 +1,91 @@
+{
+  "engine": "python_adhoc_procedural",
+  "log": "/workspace/vortex-vs-adhoc/results/synthetic_pd.log",
+  "timestamp": "2026-08-27T01:56:50.823055+00:00",
+  "results": [
+    {
+      "name": "setup_violation",
+      "severity": "error",
+      "count": 52,
+      "threshold": 0,
+      "triggered": true,
+      "note": "Timing setup fails (any count is actionable).",
+      "first": {
+        "line": 502,
+        "text": "VIOLATED setup path endpoint ff_reg_500/D slack -0.2"
+      }
+    },
+    {
+      "name": "hold_violation",
+      "severity": "error",
+      "count": 66,
+      "threshold": 0,
+      "triggered": true,
+      "note": "Timing hold fails.",
+      "first": {
+        "line": 3502,
+        "text": "Hold slack -5ps on capture edge"
+      }
+    },
+    {
+      "name": "max_transition",
+      "severity": "warning",
+      "count": 57,
+      "threshold": 10,
+      "triggered": true,
+      "note": "Flag only if more than 10 MaxTran hits (noise floor).",
+      "first": {
+        "line": 4002,
+        "text": "MAXTRAN fail pin buf_4000/Z"
+      }
+    },
+    {
+      "name": "drc_error",
+      "severity": "error",
+      "count": 67,
+      "threshold": 0,
+      "triggered": true,
+      "note": "Hard DRC errors.",
+      "first": {
+        "line": 2002,
+        "text": "ERROR: DRC short metal2 shape_2000"
+      }
+    },
+    {
+      "name": "antenna",
+      "severity": "warning",
+      "count": 57,
+      "threshold": 5,
+      "triggered": true,
+      "note": "Antenna noise below 5 is ignored.",
+      "first": {
+        "line": 2502,
+        "text": "ANTENNA violation net ant_2500"
+      }
+    },
+    {
+      "name": "congestion_hotspot",
+      "severity": "warning",
+      "count": 43,
+      "threshold": 0,
+      "triggered": true,
+      "note": "Routing congestion / overflow hotspots.",
+      "first": {
+        "line": 1502,
+        "text": "Overflow > 55 edge e_1500"
+      }
+    },
+    {
+      "name": "fatal_or_abort",
+      "severity": "fatal",
+      "count": 57,
+      "threshold": 0,
+      "triggered": true,
+      "note": "Tool death / internal errors \u2014 stop and escalate.",
+      "first": {
+        "line": 1002,
+        "text": "FATAL: license checkout failed"
+      }
+    }
+  ]
+}

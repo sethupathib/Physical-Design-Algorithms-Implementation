@@ -1,0 +1,43 @@
+========================================================================
+SUMMARY — YAML DSL policy vs ad-hoc Bash / Python / Perl
+========================================================================
+
+1) Lines of code (non-blank, non-comment)
+   YAML policy (intent)         51
+   Bash ad-hoc                  96
+   Python ad-hoc               123
+   Perl ad-hoc                  69
+   YAML reference runner*      104
+   * engine glue — not edited when changing rules; Vortex replaces this.
+   Bash / YAML LOC ratio    1.88x
+
+2) Wall time (seconds) on same synthetic log
+   yaml_dsl     0.992
+   bash         0.233
+   python       0.990
+   perl         1.066
+   vortex       skip
+
+3) Triggered-rule agreement vs YAML DSL
+   yaml_dsl     ['antenna', 'congestion_hotspot', 'drc_error', 'fatal_or_abort', 'hold_violation', 'max_transition', 'setup_violation']  MATCH
+   python       ['antenna', 'congestion_hotspot', 'drc_error', 'fatal_or_abort', 'hold_violation', 'max_transition', 'setup_violation']  MATCH
+   bash         ['antenna', 'congestion_hotspot', 'drc_error', 'fatal_or_abort', 'hold_violation', 'max_transition', 'setup_violation']  MATCH
+   perl         ['antenna', 'congestion_hotspot', 'drc_error', 'fatal_or_abort', 'hold_violation', 'max_transition', 'setup_violation']  MATCH
+
+4) Per-rule hit counts (yaml_dsl vs bash)
+   rule                       yaml     bash   python     perl
+   setup_violation              52       52       52       52
+   hold_violation               66       66       66       66
+   max_transition               57       57       57       57
+   drc_error                    67       67       67       67
+   antenna                      57       57       57       57
+   congestion_hotspot           43       43       43       43
+   fatal_or_abort               57       57       57       57
+
+5) Methodological takeaway
+   - YAML encodes INTENT (what to find) in ~one screen.
+   - Ad-hoc scripts encode IMPLEMENTATION (how) and bury thresholds in code.
+   - Editing a threshold: YAML one field; Bash find/replace + retest.
+   - Team alignment: one policy file vs N personal scripts.
+   - Vortex product = industrial engine for this DSL (perf + audit), not the YAML itself.
+========================================================================

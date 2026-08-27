@@ -1,0 +1,55 @@
+{
+   "results" : [
+      {
+         "threshold" : 0,
+         "count" : 52,
+         "severity" : "error",
+         "triggered" : true,
+         "name" : "setup_violation"
+      },
+      {
+         "threshold" : 0,
+         "severity" : "error",
+         "count" : 66,
+         "name" : "hold_violation",
+         "triggered" : true
+      },
+      {
+         "triggered" : true,
+         "name" : "max_transition",
+         "count" : 57,
+         "severity" : "warning",
+         "threshold" : 10
+      },
+      {
+         "threshold" : 0,
+         "severity" : "error",
+         "count" : 67,
+         "name" : "drc_error",
+         "triggered" : true
+      },
+      {
+         "name" : "antenna",
+         "triggered" : true,
+         "severity" : "warning",
+         "count" : 57,
+         "threshold" : 5
+      },
+      {
+         "severity" : "warning",
+         "count" : 43,
+         "name" : "congestion_hotspot",
+         "triggered" : true,
+         "threshold" : 0
+      },
+      {
+         "threshold" : 0,
+         "count" : 57,
+         "severity" : "fatal",
+         "triggered" : true,
+         "name" : "fatal_or_abort"
+      }
+   ],
+   "engine" : "perl_adhoc_procedural",
+   "log" : "/workspace/vortex-vs-adhoc/results/synthetic_pd.log"
+}

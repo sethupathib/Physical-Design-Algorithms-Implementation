@@ -1,0 +1,8 @@
+# Minimal deps to reproduce the comparison on a laptop / CI host.
+PyYAML>=6.0
+
+# Optional — render WHITEPAPER.md to PDF:
+#   pip install markdown weasyprint
+#   python3 docs/build_whitepaper_pdf.py
+markdown>=3.5
+weasyprint>=60.0
