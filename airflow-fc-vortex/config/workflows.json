@@ -1,0 +1,9 @@
+{
+  "name": "nightly_signoff_lite",
+  "description": "Hack #8 — workflow-as-data. Add a job = add a JSON object.",
+  "jobs": [
+    {"design": "cpu_top", "corner": "ss_0p75", "scenario": "timing_fail", "retries": 0},
+    {"design": "cpu_top", "corner": "tt_0p85", "scenario": "clean", "retries": 0},
+    {"design": "mem_ss", "corner": "ss_0p75", "scenario": "drc_fail", "retries": 1}
+  ]
+}

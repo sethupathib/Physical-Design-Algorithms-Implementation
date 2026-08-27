@@ -1,0 +1,42 @@
+========================================================================
+SUMMARY — Airflow hacks for FC + Vortex workflow optimization
+========================================================================
+
+SCOPE
+  Demo uses mock FC + mock Vortex. Point FC_BIN/VORTEX_BIN for production.
+  local_runner.py proves the hacks without installing Airflow.
+
+1) Lines of code (non-blank, non-comment)
+   Ad-hoc Bash pipeline             46
+   Airflow DAG fc_vortex_chain     130
+   Policy YAML (Vortex rules)       42
+   workflows.json (job list)         9
+   Note: adding a corner in Airflow = edit params/JSON; in Bash = edit script.
+
+2) Wall time (demo mocks, illustrative)
+   ad-hoc bash     1.392s
+   local_runner    3.640s
+
+3) Killer insight — naive grep vs structured overall
+   NAIVE=1 false-positive routes: 4  (grep hits rule names in JSON)
+   Fair JSON overall ARCHIVE (clean): 2
+   Airflow branch uses Vortex overall — not brittle grep.
+
+4) Hack outcomes (local_runner)
+   #1/#2 chain→branch: overall=error branch=open_jira_timing
+   #3/#4 pool wall=1.081s vs unlimited=0.334s (pool_slots=1)
+   #5 short-circuit: skipped_vortex=True branch=fc_fatal_short_circuit
+   #7 retry: retries=1 overall=error
+   #8 factory jobs: 3
+
+5) Optimization guidance (what to do Monday)
+   - Create Airflow pool fc_licenses = # of FC seats
+   - Drop dags/*.py into AIRFLOW_HOME/dags
+   - Keep rules in config/design_health.yaml (shared with Vortex)
+   - Add corners in params / workflows.json — not in Bash
+   - Branch on Vortex severity instead of tribal grep knowledge
+
+6) Claim gate
+   CITEABLE=yes_airflow_hacks_demo
+   Does NOT claim Synopsys FC runtime reduction; claims workflow control.
+========================================================================

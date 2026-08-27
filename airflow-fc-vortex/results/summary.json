@@ -1,0 +1,30 @@
+{
+  "loc_adhoc": 46,
+  "loc_dag": 130,
+  "adhoc_time": "1.392",
+  "runner_time": "3.640",
+  "naive_false_positives": 4,
+  "fair_archive_clean": 2,
+  "claim_gate": "CITEABLE=yes_airflow_hacks_demo",
+  "h12_branch": "open_jira_timing",
+  "h5_skip": true,
+  "pool": {
+    "hack": "3_4_pool_vs_unlimited",
+    "corners": [
+      "ss_0p75",
+      "tt_0p85",
+      "ff_0p95",
+      "ss_0p70"
+    ],
+    "pool_slots": 1,
+    "pooled_wall_s": 1.081,
+    "unlimited_wall_s": 0.334,
+    "pooled_peak_meaning": "max 1 FC at a time (license safe)",
+    "unlimited_peak_meaning": "4 FC at once (license thrash risk)",
+    "pooled_branches": [
+      "archive_green",
+      "open_jira_timing"
+    ],
+    "unlimited_ok": true
+  }
+}
