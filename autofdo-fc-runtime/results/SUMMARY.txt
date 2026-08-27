@@ -1,0 +1,29 @@
+========================================================================
+SUMMARY — AutoFDO/PGO for PD/signoff-shaped runtime (proxy)
+========================================================================
+
+IMPORTANT SCOPE
+  - Measured binary: signoff_proxy (open microbench), NOT Fusion Compiler.
+  - Vendor EDA binaries cannot be AutoFDO-rebuilt without source.
+  - Kernel AutoFDO (~10% latency in published Neper/tcp_rr) is a FARM host
+    methodology — see farm/KERNEL_AUTOFDO.md and WHITEPAPER.md.
+
+1) Wall time (median of repeats)
+   baseline         69.895 ms
+   pgo (instr)      70.745 ms   speedup 0.988x   improve -1.22%
+   autofdo(smpl)     SKIP
+
+2) Correctness (same seed)
+   dispatch  baseline=8134051915961850746 pgo=8134051915961850746  MATCH
+   checksum  baseline=2.27433e+06 pgo=2.27433e+06  MATCH
+
+3) How this maps to Fusion Compiler / signoff farms
+   A) User-space PGO/AutoFDO  → your CAD helpers, log tools, in-house engines
+   B) Kernel AutoFDO          → farm Linux (published ~10% kernel latency)
+   C) Vendor FC/ICC2/PT       → ask vendor for PGO builds; you cannot rebuild
+
+4) Claim gate
+   CITEABLE=yes_proxy_measured_neutral
+   NEVER cite proxy numbers as 'Fusion Compiler got X% faster'.
+   Kernel 10% figure: cite Google/Meta/LPC papers, not this microbench.
+========================================================================

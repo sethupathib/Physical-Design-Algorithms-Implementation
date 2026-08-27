@@ -1,0 +1,9 @@
+{
+  "baseline_ms": 69.895,
+  "pgo_ms": 70.745,
+  "speedup_pgo": 0.9879850166089476,
+  "improve_pgo_pct": -1.2161098791043832,
+  "correct": true,
+  "claim_gate": "CITEABLE=yes_proxy_measured_neutral",
+  "afdo_ok": false
+}
