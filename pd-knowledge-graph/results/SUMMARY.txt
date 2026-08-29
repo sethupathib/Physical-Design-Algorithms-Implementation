@@ -1,0 +1,33 @@
+========================================================================
+SUMMARY — Physical Design Knowledge Graph (PDKG)
+Inspired by ChipMind ChipKG (arXiv:2512.05371), adapted to PD methodology
+========================================================================
+
+ACCURACY POLICY
+  - Closed ontology + relation vocabulary
+  - Gold triples curated with confidence + provenance
+  - Auto-extract flagged source=auto (corpus demo)
+  - Eval uses atomic facts grounded in gold — not ChipMind's 0.95 SpecEval F1
+
+1) Graph size
+   nodes=76  edges=73
+   by_class={'backbone': 54, 'normalization': 8, 'auxiliary': 9, 'linking': 2}
+   by_source={'gold': 62, 'auto': 11}
+   curated gold triples: 62
+
+2) Offline QA (atomic-fact proxy)
+   questions: 6
+   avg Atomic-F1 proxy: 1.0
+   avg entity recall:   1.0
+   path checks OK:      True
+
+3) ChipMind mapping
+   CSA              → PDKG csa_types (FlowStage, FailureMode, ...)
+   Hierarchical T_* → backbone/auxiliary/linking/normalization
+   Adaptive Top-K   → scripts use MIG proxy (BoW cosine)
+   SpecEval-QA      → queries/pd_eval_qa.yaml (PD methodology)
+
+4) Claim gate
+   CITEABLE=yes_pdkg_gold_eval
+   Do NOT cite ChipMind's +34.59% / 0.95 F1 as this repo's score.
+========================================================================

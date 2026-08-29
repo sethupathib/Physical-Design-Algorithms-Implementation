@@ -1,0 +1,84 @@
+{
+  "n_questions": 6,
+  "avg_atomic_f1_proxy": 1.0,
+  "avg_entity_recall": 1.0,
+  "all_path_ok": true,
+  "results": [
+    {
+      "id": "q1_flow_place_cts",
+      "type": "flow_order",
+      "fact_recall": 1.0,
+      "entity_recall": 1.0,
+      "path_ok": null,
+      "atomic_f1_proxy": 1.0,
+      "matched_facts": [
+        "Placement precedes_in_flow Clock_Tree_Synthesis"
+      ],
+      "n_evidence": 13
+    },
+    {
+      "id": "q2_cong_to_setup",
+      "type": "causal_multihop",
+      "fact_recall": 1.0,
+      "entity_recall": 1.0,
+      "path_ok": true,
+      "atomic_f1_proxy": 1.0,
+      "matched_facts": [
+        "High_Placement_Density causes Routing_Congestion",
+        "Routing_Congestion causes Detour_Wirelength",
+        "Detour_Wirelength causes Setup_Violation"
+      ],
+      "n_evidence": 4
+    },
+    {
+      "id": "q3_hold_mitigation",
+      "type": "mitigation",
+      "fact_recall": 1.0,
+      "entity_recall": 1.0,
+      "path_ok": null,
+      "atomic_f1_proxy": 1.0,
+      "matched_facts": [
+        "Hold_Buffer_Insertion mitigates Hold_Violation"
+      ],
+      "n_evidence": 3
+    },
+    {
+      "id": "q4_sta_consumes",
+      "type": "artifact",
+      "fact_recall": 1.0,
+      "entity_recall": 1.0,
+      "path_ok": null,
+      "atomic_f1_proxy": 1.0,
+      "matched_facts": [
+        "Static_Timing_Analysis consumes SPEF_or_RCDB"
+      ],
+      "n_evidence": 13
+    },
+    {
+      "id": "q5_antenna",
+      "type": "check_mitigation",
+      "fact_recall": 1.0,
+      "entity_recall": 1.0,
+      "path_ok": null,
+      "atomic_f1_proxy": 1.0,
+      "matched_facts": [
+        "Antenna_Check detects Antenna_Violation",
+        "Antenna_Diode_or_Layer_Hop mitigates Antenna_Violation"
+      ],
+      "n_evidence": 8
+    },
+    {
+      "id": "q6_wns_alias",
+      "type": "normalization",
+      "fact_recall": 1.0,
+      "entity_recall": 1.0,
+      "path_ok": null,
+      "atomic_f1_proxy": 1.0,
+      "matched_facts": [
+        "WNS also_called Worst_Negative_Slack"
+      ],
+      "n_evidence": 2
+    }
+  ],
+  "claim_note": "Offline Atomic-F1 proxy over curated gold facts \u2014 NOT ChipMind SpecEval numbers (ChipMind reports 0.95 F1 on SpecEval-QA with LLM judges)."
+}

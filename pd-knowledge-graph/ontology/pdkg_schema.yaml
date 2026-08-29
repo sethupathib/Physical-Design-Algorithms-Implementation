@@ -1,0 +1,94 @@
+# Physical Design Knowledge Graph (PDKG) — ontology
+# Inspired by ChipMind (arXiv:2512.05371) Circuit Semantic-Aware KG construction,
+# adapted from IC *specifications* to physical-design *methodology*.
+#
+# Accuracy policy:
+#   - entity/relation types are closed (no free-form inventing at query time)
+#   - curated seed triples carry provenance + confidence
+#   - auto-extracted triples are flagged source=auto and never mixed into "gold" claims
+
+version: 1
+name: PDKG
+inspired_by:
+  paper: "ChipMind: Retrieval-Augmented Reasoning for Long-Context Circuit Design Specifications"
+  arxiv: "2512.05371"
+  adaptation: >
+    ChipMind builds ChipKG from circuit specs (registers, FSMs, signal deps).
+    PDKG applies the same CSA + hierarchical triple schema to PD flow,
+    constraints, metrics, and causal methodology knowledge.
+
+# --- Circuit Semantic Anchor types (ChipMind CSA adapted to PD) ---
+csa_types:
+  - FlowStage          # floorplan, place, cts, route, signoff, ...
+  - PhysicalObject     # cell, net, via, macro, track, blockage
+  - Constraint         # setup, hold, max_tran, density, ...
+  - Metric             # WNS, TNS, overflow, wirelength, IR drop
+  - Check              # DRC, LVS, antenna, ERC, EM, IR
+  - ToolClass          # implementation, STA, extraction, PV (vendor-neutral)
+  - FailureMode        # congestion hotspot, hold fail, antenna viol
+  - Action             # insert buffer, widen spacing, upsize cell
+  - InputArtifact      # netlist, SDC, UPF, LEF/DEF, SPEF/RC
+  - OutputArtifact     # GDS, timing report, DRC database
+
+entity_types:
+  - FlowStage
+  - PhysicalObject
+  - Constraint
+  - Metric
+  - Check
+  - ToolClass
+  - FailureMode
+  - Action
+  - InputArtifact
+  - OutputArtifact
+
+# Closed relation vocabulary (backbone / auxiliary / linking / normalization)
+relations:
+  backbone:  # T_B — central definition or action
+    - is_a
+    - part_of
+    - precedes_in_flow
+    - produces
+    - consumes
+    - measures
+    - enforces
+    - detects
+    - mitigates
+    - causes
+    - defined_as
+  auxiliary:  # T_A — conditions / qualifiers
+    - when
+    - unless
+    - typically_after
+    - typically_before
+    - under_corner
+    - with_metric_threshold
+  linking:  # T_L — connect backbone to auxiliaries
+    - qualified_by
+    - depends_on
+  normalization:  # T_N — aliases / canonical forms
+    - same_as
+    - also_called
+
+# Allowed (subject_type, relation, object_type) — soft schema for validators
+allowed_patterns:
+  - [FlowStage, precedes_in_flow, FlowStage]
+  - [FlowStage, consumes, InputArtifact]
+  - [FlowStage, produces, OutputArtifact]
+  - [FlowStage, produces, Metric]
+  - [Constraint, enforces, Metric]
+  - [Check, detects, FailureMode]
+  - [FailureMode, causes, FailureMode]
+  - [Action, mitigates, FailureMode]
+  - [Metric, measures, Constraint]
+  - [ToolClass, detects, FailureMode]
+  - [PhysicalObject, part_of, PhysicalObject]
+  - [Entity, same_as, Entity]
+  - [Entity, also_called, Entity]
+  - [Entity, is_a, Entity]
+  - [Entity, defined_as, Entity]
+  - [Entity, qualified_by, Entity]
+  - [Entity, depends_on, Entity]
+  - [Entity, when, Entity]
+  - [Entity, typically_after, Entity]
+  - [Entity, typically_before, Entity]
