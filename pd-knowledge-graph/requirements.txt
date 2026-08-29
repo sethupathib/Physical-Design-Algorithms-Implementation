@@ -1,0 +1,5 @@
+PyYAML>=6.0
+matplotlib>=3.8
+Pillow>=10.0
+markdown>=3.5
+weasyprint>=60.0

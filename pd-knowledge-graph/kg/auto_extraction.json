@@ -1,0 +1,856 @@
+[
+  {
+    "doc_id": "pd_flow_overview",
+    "irs": [
+      {
+        "sentence": "Floorplan defines the die outline, core area, and macro placement regions before detailed placement.",
+        "function": "declarative",
+        "csa": {
+          "type": "FlowStage",
+          "entity": "Floorplan"
+        },
+        "entities": [
+          {
+            "type": "FlowStage",
+            "entity": "Floorplan"
+          },
+          {
+            "type": "FlowStage",
+            "entity": "Placement"
+          }
+        ],
+        "trigger": null,
+        "condition": null,
+        "action": null,
+        "attributes": {
+          "definitional": true
+        }
+      },
+      {
+        "sentence": "Power planning builds the power grid straps and rings that supply standard cells and macros.",
+        "function": "declarative",
+        "csa": {
+          "type": "FlowStage",
+          "entity": "Power_Planning"
+        },
+        "entities": [
+          {
+            "type": "FlowStage",
+            "entity": "Power_Planning"
+          },
+          {
+            "type": "PhysicalObject",
+            "entity": "Power_Grid"
+          },
+          {
+            "type": "FlowStage",
+            "entity": "Static_Timing_Analysis"
+          }
+        ],
+        "trigger": null,
+        "condition": null,
+        "action": null,
+        "attributes": {
+          "definitional": true
+        }
+      },
+      {
+        "sentence": "Placement assigns standard cells to legal sites while honoring timing, density, and congestion objectives.",
+        "function": "declarative",
+        "csa": {
+          "type": "FailureMode",
+          "entity": "Routing_Congestion"
+        },
+        "entities": [
+          {
+            "type": "FailureMode",
+            "entity": "Routing_Congestion"
+          },
+          {
+            "type": "FlowStage",
+            "entity": "Placement"
+          },
+          {
+            "type": "FlowStage",
+            "entity": "Static_Timing_Analysis"
+          }
+        ],
+        "trigger": null,
+        "condition": null,
+        "action": null,
+        "attributes": {
+          "definitional": true
+        }
+      },
+      {
+        "sentence": "Clock tree synthesis inserts buffers and routes clock nets to meet skew and insertion delay targets.",
+        "function": "declarative",
+        "csa": {
+          "type": "FlowStage",
+          "entity": "Clock_Tree_Synthesis"
+        },
+        "entities": [
+          {
+            "type": "FlowStage",
+            "entity": "Clock_Tree_Synthesis"
+          },
+          {
+            "type": "Action",
+            "entity": "Buffer_Insertion_or_Upsize"
+          }
+        ],
+        "trigger": null,
+        "condition": null,
+        "action": null,
+        "attributes": {
+          "definitional": true
+        }
+      },
+      {
+        "sentence": "Routing connects signal nets on metal layers subject to design rules and congestion maps.",
+        "function": "declarative",
+        "csa": {
+          "type": "FailureMode",
+          "entity": "Routing_Congestion"
+        },
+        "entities": [
+          {
+            "type": "FailureMode",
+            "entity": "Routing_Congestion"
+          },
+          {
+            "type": "FlowStage",
+            "entity": "Routing"
+          },
+          {
+            "type": "FlowStage",
+            "entity": "Clock_Tree_Synthesis"
+          }
+        ],
+        "trigger": null,
+        "condition": null,
+        "action": null,
+        "attributes": {
+          "definitional": true
+        }
+      },
+      {
+        "sentence": "RC extraction computes parasitic resistance and capacitance for each net after routing.",
+        "function": "declarative",
+        "csa": {
+          "type": "FlowStage",
+          "entity": "RC_Extraction"
+        },
+        "entities": [
+          {
+            "type": "FlowStage",
+            "entity": "RC_Extraction"
+          },
+          {
+            "type": "FlowStage",
+            "entity": "Routing"
+          },
+          {
+            "type": "FlowStage",
+            "entity": "Static_Timing_Analysis"
+          }
+        ],
+        "trigger": null,
+        "condition": null,
+        "action": null,
+        "attributes": {
+          "definitional": true
+        }
+      },
+      {
+        "sentence": "Static timing analysis evaluates setup and hold slack using extracted parasitics and SDC constraints.",
+        "function": "declarative",
+        "csa": {
+          "type": "FlowStage",
+          "entity": "Static_Timing_Analysis"
+        },
+        "entities": [
+          {
+            "type": "FlowStage",
+            "entity": "Static_Timing_Analysis"
+          },
+          {
+            "type": "InputArtifact",
+            "entity": "SPEF_or_RCDB"
+          },
+          {
+            "type": "InputArtifact",
+            "entity": "SDC"
+          }
+        ],
+        "trigger": null,
+        "condition": null,
+        "action": null,
+        "attributes": {
+          "definitional": true
+        }
+      },
+      {
+        "sentence": "Physical verification runs DRC, LVS, and antenna checks before signoff.",
+        "function": "declarative",
+        "csa": {
+          "type": "FlowStage",
+          "entity": "Physical_Verification"
+        },
+        "entities": [
+          {
+            "type": "FlowStage",
+            "entity": "Physical_Verification"
+          },
+          {
+            "type": "FlowStage",
+            "entity": "Signoff"
+          },
+          {
+            "type": "FailureMode",
+            "entity": "Antenna_Violation"
+          },
+          {
+            "type": "Check",
+            "entity": "Design_Rule_Check"
+          },
+          {
+            "type": "Check",
+            "entity": "Layout_Versus_Schematic"
+          }
+        ],
+        "trigger": null,
+        "condition": null,
+        "action": null,
+        "attributes": {
+          "definitional": true
+        }
+      }
+    ],
+    "triples": [
+      {
+        "subject": "Floorplan",
+        "relation": "typically_before",
+        "object": "Placement",
+        "triple_class": "auxiliary",
+        "csa": [
+          "FlowStage",
+          "Floorplan"
+        ],
+        "confidence": 0.65,
+        "source": "auto:pd_flow_overview",
+        "provenance": "Floorplan defines the die outline, core area, and macro placement regions before detailed placement."
+      },
+      {
+        "subject": "CTS",
+        "relation": "same_as",
+        "object": "Clock_Tree_Synthesis",
+        "triple_class": "normalization",
+        "csa": [
+          "FailureMode",
+          "Routing_Congestion"
+        ],
+        "confidence": 0.95,
+        "source": "auto:pd_flow_overview",
+        "provenance": "Routing connects signal nets on metal layers subject to design rules and congestion maps."
+      },
+      {
+        "subject": "RC_Extraction",
+        "relation": "typically_after",
+        "object": "Routing",
+        "triple_class": "auxiliary",
+        "csa": [
+          "FlowStage",
+          "RC_Extraction"
+        ],
+        "confidence": 0.65,
+        "source": "auto:pd_flow_overview",
+        "provenance": "RC extraction computes parasitic resistance and capacitance for each net after routing."
+      },
+      {
+        "subject": "Physical_Verification",
+        "relation": "typically_before",
+        "object": "Signoff",
+        "triple_class": "auxiliary",
+        "csa": [
+          "FlowStage",
+          "Physical_Verification"
+        ],
+        "confidence": 0.65,
+        "source": "auto:pd_flow_overview",
+        "provenance": "Physical verification runs DRC, LVS, and antenna checks before signoff."
+      }
+    ]
+  },
+  {
+    "doc_id": "timing_causality",
+    "irs": [
+      {
+        "sentence": "If placement density is too high, global routing reports congestion overflow in gcells.",
+        "function": "procedural",
+        "csa": {
+          "type": "FailureMode",
+          "entity": "Routing_Congestion"
+        },
+        "entities": [
+          {
+            "type": "FailureMode",
+            "entity": "Routing_Congestion"
+          },
+          {
+            "type": "FailureMode",
+            "entity": "High_Placement_Density"
+          },
+          {
+            "type": "FlowStage",
+            "entity": "Placement"
+          },
+          {
+            "type": "FlowStage",
+            "entity": "Routing"
+          }
+        ],
+        "trigger": null,
+        "condition": "If placement density is too high, global routing reports congestion overflow in gcells.",
+        "action": null,
+        "attributes": {}
+      },
+      {
+        "sentence": "Routing congestion causes detours that increase wirelength and net capacitance.",
+        "function": "procedural",
+        "csa": {
+          "type": "FailureMode",
+          "entity": "Routing_Congestion"
+        },
+        "entities": [
+          {
+            "type": "FailureMode",
+            "entity": "Routing_Congestion"
+          },
+          {
+            "type": "FailureMode",
+            "entity": "Detour_Wirelength"
+          },
+          {
+            "type": "FlowStage",
+            "entity": "Routing"
+          }
+        ],
+        "trigger": "causal",
+        "condition": null,
+        "action": null,
+        "attributes": {}
+      },
+      {
+        "sentence": "Increased detour wirelength increases data-path delay and can create setup violations.",
+        "function": "declarative",
+        "csa": {
+          "type": "FailureMode",
+          "entity": "Setup_Violation"
+        },
+        "entities": [
+          {
+            "type": "FailureMode",
+            "entity": "Setup_Violation"
+          },
+          {
+            "type": "FailureMode",
+            "entity": "Detour_Wirelength"
+          }
+        ],
+        "trigger": null,
+        "condition": null,
+        "action": null,
+        "attributes": {
+          "definitional": true
+        }
+      },
+      {
+        "sentence": "Large clock skew on a short data path can create hold violations.",
+        "function": "declarative",
+        "csa": {
+          "type": "FailureMode",
+          "entity": "Hold_Violation"
+        },
+        "entities": [
+          {
+            "type": "FailureMode",
+            "entity": "Hold_Violation"
+          }
+        ],
+        "trigger": null,
+        "condition": null,
+        "action": null,
+        "attributes": {
+          "definitional": true
+        }
+      },
+      {
+        "sentence": "Missing hold buffers after CTS commonly leave short paths failing hold.",
+        "function": "procedural",
+        "csa": {
+          "type": "Action",
+          "entity": "Hold_Buffer_Insertion"
+        },
+        "entities": [
+          {
+            "type": "Action",
+            "entity": "Hold_Buffer_Insertion"
+          },
+          {
+            "type": "Action",
+            "entity": "Buffer_Insertion_or_Upsize"
+          },
+          {
+            "type": "FlowStage",
+            "entity": "Clock_Tree_Synthesis"
+          }
+        ],
+        "trigger": null,
+        "condition": null,
+        "action": null,
+        "attributes": {}
+      },
+      {
+        "sentence": "When setup fails, engineers typically insert buffers or upsize cells on the critical path.",
+        "function": "procedural",
+        "csa": {
+          "type": "Action",
+          "entity": "Buffer_Insertion_or_Upsize"
+        },
+        "entities": [
+          {
+            "type": "Action",
+            "entity": "Buffer_Insertion_or_Upsize"
+          }
+        ],
+        "trigger": null,
+        "condition": null,
+        "action": "When setup fails, engineers typically insert buffers or upsize cells on the critical path.",
+        "attributes": {}
+      },
+      {
+        "sentence": "When hold fails, engineers insert hold buffers to add delay on the short path.",
+        "function": "procedural",
+        "csa": {
+          "type": "Action",
+          "entity": "Hold_Buffer_Insertion"
+        },
+        "entities": [
+          {
+            "type": "Action",
+            "entity": "Hold_Buffer_Insertion"
+          },
+          {
+            "type": "Action",
+            "entity": "Buffer_Insertion_or_Upsize"
+          }
+        ],
+        "trigger": null,
+        "condition": null,
+        "action": "When hold fails, engineers insert hold buffers to add delay on the short path.",
+        "attributes": {}
+      }
+    ],
+    "triples": [
+      {
+        "subject": "High_Placement_Density",
+        "relation": "causes",
+        "object": "Routing_Congestion",
+        "triple_class": "backbone",
+        "csa": [
+          "FailureMode",
+          "Routing_Congestion"
+        ],
+        "confidence": 0.7,
+        "source": "auto:timing_causality",
+        "provenance": "If placement density is too high, global routing reports congestion overflow in gcells."
+      },
+      {
+        "subject": "Routing_Congestion",
+        "relation": "causes",
+        "object": "Detour_Wirelength",
+        "triple_class": "backbone",
+        "csa": [
+          "FailureMode",
+          "Routing_Congestion"
+        ],
+        "confidence": 0.75,
+        "source": "auto:timing_causality",
+        "provenance": "Routing congestion causes detours that increase wirelength and net capacitance."
+      },
+      {
+        "subject": "Routing_Congestion",
+        "relation": "when",
+        "object": "Detour_Wirelength",
+        "triple_class": "auxiliary",
+        "csa": [
+          "FailureMode",
+          "Routing_Congestion"
+        ],
+        "confidence": 0.6,
+        "source": "auto:timing_causality",
+        "provenance": "Routing congestion causes detours that increase wirelength and net capacitance."
+      },
+      {
+        "subject": "Routing_Congestion",
+        "relation": "qualified_by",
+        "object": "Detour_Wirelength",
+        "triple_class": "linking",
+        "csa": [
+          "FailureMode",
+          "Routing_Congestion"
+        ],
+        "confidence": 0.6,
+        "source": "auto:timing_causality",
+        "provenance": "Routing congestion causes detours that increase wirelength and net capacitance."
+      },
+      {
+        "subject": "CTS",
+        "relation": "same_as",
+        "object": "Clock_Tree_Synthesis",
+        "triple_class": "normalization",
+        "csa": [
+          "Action",
+          "Hold_Buffer_Insertion"
+        ],
+        "confidence": 0.95,
+        "source": "auto:timing_causality",
+        "provenance": "Missing hold buffers after CTS commonly leave short paths failing hold."
+      },
+      {
+        "subject": "Hold_Buffer_Insertion",
+        "relation": "typically_after",
+        "object": "Buffer_Insertion_or_Upsize",
+        "triple_class": "auxiliary",
+        "csa": [
+          "Action",
+          "Hold_Buffer_Insertion"
+        ],
+        "confidence": 0.65,
+        "source": "auto:timing_causality",
+        "provenance": "Missing hold buffers after CTS commonly leave short paths failing hold."
+      },
+      {
+        "subject": "Hold_Buffer_Insertion",
+        "relation": "mitigates",
+        "object": "Hold_Violation",
+        "triple_class": "backbone",
+        "csa": [
+          "Action",
+          "Hold_Buffer_Insertion"
+        ],
+        "confidence": 0.8,
+        "source": "auto:timing_causality",
+        "provenance": "Missing hold buffers after CTS commonly leave short paths failing hold."
+      },
+      {
+        "subject": "Buffer_Insertion_or_Upsize",
+        "relation": "mitigates",
+        "object": "Setup_Violation",
+        "triple_class": "backbone",
+        "csa": [
+          "Action",
+          "Buffer_Insertion_or_Upsize"
+        ],
+        "confidence": 0.8,
+        "source": "auto:timing_causality",
+        "provenance": "When setup fails, engineers typically insert buffers or upsize cells on the critical path."
+      },
+      {
+        "subject": "Hold_Buffer_Insertion",
+        "relation": "mitigates",
+        "object": "Hold_Violation",
+        "triple_class": "backbone",
+        "csa": [
+          "Action",
+          "Hold_Buffer_Insertion"
+        ],
+        "confidence": 0.8,
+        "source": "auto:timing_causality",
+        "provenance": "When hold fails, engineers insert hold buffers to add delay on the short path."
+      }
+    ]
+  },
+  {
+    "doc_id": "signoff_checks",
+    "irs": [
+      {
+        "sentence": "Design rule check detects spacing, width, and via rule violations against the foundry deck.",
+        "function": "declarative",
+        "csa": {
+          "type": "Check",
+          "entity": "Design_Rule_Check"
+        },
+        "entities": [
+          {
+            "type": "Check",
+            "entity": "Design_Rule_Check"
+          },
+          {
+            "type": "FlowStage",
+            "entity": "Clock_Tree_Synthesis"
+          }
+        ],
+        "trigger": null,
+        "condition": null,
+        "action": null,
+        "attributes": {
+          "definitional": true
+        }
+      },
+      {
+        "sentence": "Layout versus schematic detects mismatches between the netlist and the drawn layout.",
+        "function": "declarative",
+        "csa": {
+          "type": "Check",
+          "entity": "Layout_Versus_Schematic"
+        },
+        "entities": [
+          {
+            "type": "Check",
+            "entity": "Layout_Versus_Schematic"
+          },
+          {
+            "type": "FlowStage",
+            "entity": "Clock_Tree_Synthesis"
+          }
+        ],
+        "trigger": null,
+        "condition": null,
+        "action": null,
+        "attributes": {
+          "definitional": true
+        }
+      },
+      {
+        "sentence": "Antenna check detects process antenna ratio violations on long metal shapes attached to gates.",
+        "function": "declarative",
+        "csa": {
+          "type": "FailureMode",
+          "entity": "Antenna_Violation"
+        },
+        "entities": [
+          {
+            "type": "FailureMode",
+            "entity": "Antenna_Violation"
+          },
+          {
+            "type": "FlowStage",
+            "entity": "Clock_Tree_Synthesis"
+          }
+        ],
+        "trigger": null,
+        "condition": null,
+        "action": null,
+        "attributes": {
+          "definitional": true
+        }
+      },
+      {
+        "sentence": "An antenna diode or a layer hop mitigates antenna violations.",
+        "function": "procedural",
+        "csa": {
+          "type": "FailureMode",
+          "entity": "Antenna_Violation"
+        },
+        "entities": [
+          {
+            "type": "FailureMode",
+            "entity": "Antenna_Violation"
+          },
+          {
+            "type": "Action",
+            "entity": "Antenna_Diode_or_Layer_Hop"
+          }
+        ],
+        "trigger": null,
+        "condition": null,
+        "action": "An antenna diode or a layer hop mitigates antenna violations.",
+        "attributes": {}
+      },
+      {
+        "sentence": "IR drop analysis detects excessive voltage drop on the power grid under switching demand.",
+        "function": "declarative",
+        "csa": {
+          "type": "PhysicalObject",
+          "entity": "Power_Grid"
+        },
+        "entities": [
+          {
+            "type": "PhysicalObject",
+            "entity": "Power_Grid"
+          },
+          {
+            "type": "FailureMode",
+            "entity": "Excessive_IR_Drop"
+          },
+          {
+            "type": "FlowStage",
+            "entity": "Clock_Tree_Synthesis"
+          }
+        ],
+        "trigger": null,
+        "condition": null,
+        "action": null,
+        "attributes": {
+          "definitional": true
+        }
+      },
+      {
+        "sentence": "Widening straps or adding vias mitigates excessive IR drop.",
+        "function": "procedural",
+        "csa": {
+          "type": "Action",
+          "entity": "Widen_Straps_or_Add_Vias"
+        },
+        "entities": [
+          {
+            "type": "Action",
+            "entity": "Widen_Straps_or_Add_Vias"
+          },
+          {
+            "type": "FailureMode",
+            "entity": "Excessive_IR_Drop"
+          }
+        ],
+        "trigger": null,
+        "condition": null,
+        "action": "Widening straps or adding vias mitigates excessive IR drop.",
+        "attributes": {}
+      }
+    ],
+    "triples": [
+      {
+        "subject": "CTS",
+        "relation": "same_as",
+        "object": "Clock_Tree_Synthesis",
+        "triple_class": "normalization",
+        "csa": [
+          "Check",
+          "Design_Rule_Check"
+        ],
+        "confidence": 0.95,
+        "source": "auto:signoff_checks",
+        "provenance": "Design rule check detects spacing, width, and via rule violations against the foundry deck."
+      },
+      {
+        "subject": "Design_Rule_Check",
+        "relation": "detects",
+        "object": "Clock_Tree_Synthesis",
+        "triple_class": "backbone",
+        "csa": [
+          "Check",
+          "Design_Rule_Check"
+        ],
+        "confidence": 0.8,
+        "source": "auto:signoff_checks",
+        "provenance": "Design rule check detects spacing, width, and via rule violations against the foundry deck."
+      },
+      {
+        "subject": "CTS",
+        "relation": "same_as",
+        "object": "Clock_Tree_Synthesis",
+        "triple_class": "normalization",
+        "csa": [
+          "Check",
+          "Layout_Versus_Schematic"
+        ],
+        "confidence": 0.95,
+        "source": "auto:signoff_checks",
+        "provenance": "Layout versus schematic detects mismatches between the netlist and the drawn layout."
+      },
+      {
+        "subject": "Layout_Versus_Schematic",
+        "relation": "detects",
+        "object": "Clock_Tree_Synthesis",
+        "triple_class": "backbone",
+        "csa": [
+          "Check",
+          "Layout_Versus_Schematic"
+        ],
+        "confidence": 0.8,
+        "source": "auto:signoff_checks",
+        "provenance": "Layout versus schematic detects mismatches between the netlist and the drawn layout."
+      },
+      {
+        "subject": "CTS",
+        "relation": "same_as",
+        "object": "Clock_Tree_Synthesis",
+        "triple_class": "normalization",
+        "csa": [
+          "FailureMode",
+          "Antenna_Violation"
+        ],
+        "confidence": 0.95,
+        "source": "auto:signoff_checks",
+        "provenance": "Antenna check detects process antenna ratio violations on long metal shapes attached to gates."
+      },
+      {
+        "subject": "Antenna_Violation",
+        "relation": "detects",
+        "object": "Clock_Tree_Synthesis",
+        "triple_class": "backbone",
+        "csa": [
+          "FailureMode",
+          "Antenna_Violation"
+        ],
+        "confidence": 0.8,
+        "source": "auto:signoff_checks",
+        "provenance": "Antenna check detects process antenna ratio violations on long metal shapes attached to gates."
+      },
+      {
+        "subject": "Antenna_Violation",
+        "relation": "mitigates",
+        "object": "Antenna_Diode_or_Layer_Hop",
+        "triple_class": "backbone",
+        "csa": [
+          "FailureMode",
+          "Antenna_Violation"
+        ],
+        "confidence": 0.8,
+        "source": "auto:signoff_checks",
+        "provenance": "An antenna diode or a layer hop mitigates antenna violations."
+      },
+      {
+        "subject": "CTS",
+        "relation": "same_as",
+        "object": "Clock_Tree_Synthesis",
+        "triple_class": "normalization",
+        "csa": [
+          "PhysicalObject",
+          "Power_Grid"
+        ],
+        "confidence": 0.95,
+        "source": "auto:signoff_checks",
+        "provenance": "IR drop analysis detects excessive voltage drop on the power grid under switching demand."
+      },
+      {
+        "subject": "Power_Grid",
+        "relation": "detects",
+        "object": "Excessive_IR_Drop",
+        "triple_class": "backbone",
+        "csa": [
+          "PhysicalObject",
+          "Power_Grid"
+        ],
+        "confidence": 0.8,
+        "source": "auto:signoff_checks",
+        "provenance": "IR drop analysis detects excessive voltage drop on the power grid under switching demand."
+      },
+      {
+        "subject": "Widen_Straps_or_Add_Vias",
+        "relation": "mitigates",
+        "object": "Excessive_IR_Drop",
+        "triple_class": "backbone",
+        "csa": [
+          "Action",
+          "Widen_Straps_or_Add_Vias"
+        ],
+        "confidence": 0.8,
+        "source": "auto:signoff_checks",
+        "provenance": "Widening straps or adding vias mitigates excessive IR drop."
+      }
+    ]
+  }
+]

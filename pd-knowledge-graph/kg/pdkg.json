@@ -1,0 +1,1272 @@
+{
+  "@context": {
+    "name": "https://schema.org/name",
+    "relation": "https://pdkg.local/relation"
+  },
+  "nodes": [
+    {
+      "name": "Floorplan",
+      "type": "FlowStage"
+    },
+    {
+      "name": "Power_Planning",
+      "type": "FlowStage"
+    },
+    {
+      "name": "Placement",
+      "type": "FlowStage"
+    },
+    {
+      "name": "Clock_Tree_Synthesis",
+      "type": "FlowStage"
+    },
+    {
+      "name": "Routing",
+      "type": "FlowStage"
+    },
+    {
+      "name": "RC_Extraction",
+      "type": "FlowStage"
+    },
+    {
+      "name": "Static_Timing_Analysis",
+      "type": "FlowStage"
+    },
+    {
+      "name": "Physical_Verification",
+      "type": "FlowStage"
+    },
+    {
+      "name": "Signoff"
+    },
+    {
+      "name": "CTS",
+      "type": "FlowStage"
+    },
+    {
+      "name": "STA",
+      "type": "FlowStage"
+    },
+    {
+      "name": "PnR",
+      "type": "FlowStage"
+    },
+    {
+      "name": "Place_and_Route"
+    },
+    {
+      "name": "WNS",
+      "type": "Metric"
+    },
+    {
+      "name": "Worst_Negative_Slack"
+    },
+    {
+      "name": "TNS",
+      "type": "Metric"
+    },
+    {
+      "name": "Total_Negative_Slack"
+    },
+    {
+      "name": "DRC",
+      "type": "Check"
+    },
+    {
+      "name": "Design_Rule_Check",
+      "type": "Check"
+    },
+    {
+      "name": "LVS",
+      "type": "Check"
+    },
+    {
+      "name": "Layout_Versus_Schematic",
+      "type": "Check"
+    },
+    {
+      "name": "MaxTran",
+      "type": "Constraint"
+    },
+    {
+      "name": "Max_Transition",
+      "type": "Constraint"
+    },
+    {
+      "name": "Gate_Level_Netlist"
+    },
+    {
+      "name": "SDC"
+    },
+    {
+      "name": "Technology_LEF"
+    },
+    {
+      "name": "SPEF_or_RCDB"
+    },
+    {
+      "name": "Timing_Report"
+    },
+    {
+      "name": "DEF_or_GDS_candidate"
+    },
+    {
+      "name": "DRC_LVS_Reports"
+    },
+    {
+      "name": "Setup_Constraint",
+      "type": "Constraint"
+    },
+    {
+      "name": "NonNegative_Setup_Slack"
+    },
+    {
+      "name": "Hold_Constraint",
+      "type": "Constraint"
+    },
+    {
+      "name": "NonNegative_Hold_Slack"
+    },
+    {
+      "name": "Slew_Limit"
+    },
+    {
+      "name": "Congestion_Overflow",
+      "type": "Metric"
+    },
+    {
+      "name": "Routing_Feasibility"
+    },
+    {
+      "name": "DRC_Violation"
+    },
+    {
+      "name": "LVS_Mismatch"
+    },
+    {
+      "name": "Antenna_Check",
+      "type": "Check"
+    },
+    {
+      "name": "Antenna_Violation",
+      "type": "FailureMode"
+    },
+    {
+      "name": "IR_Drop_Analysis",
+      "type": "Check"
+    },
+    {
+      "name": "Excessive_IR_Drop"
+    },
+    {
+      "name": "EM_Analysis",
+      "type": "Check"
+    },
+    {
+      "name": "Electromigration_Risk"
+    },
+    {
+      "name": "High_Placement_Density",
+      "type": "FailureMode"
+    },
+    {
+      "name": "Routing_Congestion",
+      "type": "FailureMode"
+    },
+    {
+      "name": "Detour_Wirelength",
+      "type": "FailureMode"
+    },
+    {
+      "name": "Setup_Violation",
+      "type": "FailureMode"
+    },
+    {
+      "name": "Clock_Uncertainty_Increase",
+      "type": "FailureMode"
+    },
+    {
+      "name": "Large_Clock_Skew",
+      "type": "FailureMode"
+    },
+    {
+      "name": "Hold_Violation",
+      "type": "FailureMode"
+    },
+    {
+      "name": "Missing_Hold_Buffering",
+      "type": "FailureMode"
+    },
+    {
+      "name": "Long_Antenna_Ratio_Net",
+      "type": "FailureMode"
+    },
+    {
+      "name": "Weak_Power_Grid",
+      "type": "FailureMode"
+    },
+    {
+      "name": "High_Via_Resistance",
+      "type": "FailureMode"
+    },
+    {
+      "name": "Cell_Padding_or_Density_Screen",
+      "type": "Action"
+    },
+    {
+      "name": "Layer_Promotion_or_NDR",
+      "type": "Action"
+    },
+    {
+      "name": "Buffer_Insertion_or_Upsize",
+      "type": "Action"
+    },
+    {
+      "name": "Hold_Buffer_Insertion",
+      "type": "Action"
+    },
+    {
+      "name": "Antenna_Diode_or_Layer_Hop",
+      "type": "Action"
+    },
+    {
+      "name": "Widen_Straps_or_Add_Vias",
+      "type": "Action"
+    },
+    {
+      "name": "Late_Data_or_Early_Clock"
+    },
+    {
+      "name": "Early_Data_or_Late_Clock"
+    },
+    {
+      "name": "Hold_Fix",
+      "type": "Action"
+    },
+    {
+      "name": "StdCell",
+      "type": "PhysicalObject"
+    },
+    {
+      "name": "PhysicalObject"
+    },
+    {
+      "name": "Macro",
+      "type": "PhysicalObject"
+    },
+    {
+      "name": "Via",
+      "type": "PhysicalObject"
+    },
+    {
+      "name": "Interconnect_Stack"
+    },
+    {
+      "name": "Power_Strap",
+      "type": "PhysicalObject"
+    },
+    {
+      "name": "Power_Grid",
+      "type": "PhysicalObject"
+    },
+    {
+      "name": "Implementation_Tool",
+      "type": "ToolClass"
+    },
+    {
+      "name": "STA_Tool",
+      "type": "ToolClass"
+    },
+    {
+      "name": "Extraction_Tool",
+      "type": "ToolClass"
+    },
+    {
+      "name": "Physical_Verification_Tool",
+      "type": "ToolClass"
+    }
+  ],
+  "edges": [
+    {
+      "subject": "Floorplan",
+      "relation": "precedes_in_flow",
+      "object": "Power_Planning",
+      "triple_class": "backbone",
+      "confidence": 0.95,
+      "source": "gold",
+      "csa": [
+        "FlowStage",
+        "Floorplan"
+      ],
+      "provenance": "standard digital PnR flow"
+    },
+    {
+      "subject": "Power_Planning",
+      "relation": "precedes_in_flow",
+      "object": "Placement",
+      "triple_class": "backbone",
+      "confidence": 0.9,
+      "source": "gold",
+      "csa": [
+        "FlowStage",
+        "Power_Planning"
+      ],
+      "provenance": "standard digital PnR flow"
+    },
+    {
+      "subject": "Placement",
+      "relation": "precedes_in_flow",
+      "object": "Clock_Tree_Synthesis",
+      "triple_class": "backbone",
+      "confidence": 0.98,
+      "source": "gold",
+      "csa": [
+        "FlowStage",
+        "Placement"
+      ],
+      "provenance": "standard digital PnR flow"
+    },
+    {
+      "subject": "Clock_Tree_Synthesis",
+      "relation": "precedes_in_flow",
+      "object": "Routing",
+      "triple_class": "backbone",
+      "confidence": 0.98,
+      "source": "gold",
+      "csa": [
+        "FlowStage",
+        "Clock_Tree_Synthesis"
+      ],
+      "provenance": "standard digital PnR flow"
+    },
+    {
+      "subject": "Routing",
+      "relation": "precedes_in_flow",
+      "object": "RC_Extraction",
+      "triple_class": "backbone",
+      "confidence": 0.95,
+      "source": "gold",
+      "csa": [
+        "FlowStage",
+        "Routing"
+      ],
+      "provenance": "signoff path after route"
+    },
+    {
+      "subject": "RC_Extraction",
+      "relation": "precedes_in_flow",
+      "object": "Static_Timing_Analysis",
+      "triple_class": "backbone",
+      "confidence": 0.95,
+      "source": "gold",
+      "csa": [
+        "FlowStage",
+        "RC_Extraction"
+      ],
+      "provenance": "SPEF/RC feeds STA"
+    },
+    {
+      "subject": "Static_Timing_Analysis",
+      "relation": "precedes_in_flow",
+      "object": "Physical_Verification",
+      "triple_class": "backbone",
+      "confidence": 0.85,
+      "source": "gold",
+      "csa": [
+        "FlowStage",
+        "Static_Timing_Analysis"
+      ],
+      "provenance": "often parallel with PV; ordering varies by methodology"
+    },
+    {
+      "subject": "Physical_Verification",
+      "relation": "precedes_in_flow",
+      "object": "Signoff",
+      "triple_class": "backbone",
+      "confidence": 0.9,
+      "source": "gold",
+      "csa": [
+        "FlowStage",
+        "Physical_Verification"
+      ],
+      "provenance": "DRC/LVS/antenna before tapeout gate"
+    },
+    {
+      "subject": "CTS",
+      "relation": "same_as",
+      "object": "Clock_Tree_Synthesis",
+      "triple_class": "normalization",
+      "confidence": 1.0,
+      "source": "gold",
+      "csa": [
+        "FlowStage",
+        "CTS"
+      ],
+      "provenance": "industry abbreviation"
+    },
+    {
+      "subject": "STA",
+      "relation": "same_as",
+      "object": "Static_Timing_Analysis",
+      "triple_class": "normalization",
+      "confidence": 1.0,
+      "source": "gold",
+      "csa": [
+        "FlowStage",
+        "STA"
+      ],
+      "provenance": "industry abbreviation"
+    },
+    {
+      "subject": "PnR",
+      "relation": "also_called",
+      "object": "Place_and_Route",
+      "triple_class": "normalization",
+      "confidence": 1.0,
+      "source": "gold",
+      "csa": [
+        "FlowStage",
+        "PnR"
+      ],
+      "provenance": "industry abbreviation"
+    },
+    {
+      "subject": "WNS",
+      "relation": "also_called",
+      "object": "Worst_Negative_Slack",
+      "triple_class": "normalization",
+      "confidence": 1.0,
+      "source": "gold",
+      "csa": [
+        "Metric",
+        "WNS"
+      ],
+      "provenance": "timing report nomenclature"
+    },
+    {
+      "subject": "TNS",
+      "relation": "also_called",
+      "object": "Total_Negative_Slack",
+      "triple_class": "normalization",
+      "confidence": 1.0,
+      "source": "gold",
+      "csa": [
+        "Metric",
+        "TNS"
+      ],
+      "provenance": "timing report nomenclature"
+    },
+    {
+      "subject": "DRC",
+      "relation": "same_as",
+      "object": "Design_Rule_Check",
+      "triple_class": "normalization",
+      "confidence": 1.0,
+      "source": "gold",
+      "csa": [
+        "Check",
+        "DRC"
+      ],
+      "provenance": "industry abbreviation"
+    },
+    {
+      "subject": "LVS",
+      "relation": "same_as",
+      "object": "Layout_Versus_Schematic",
+      "triple_class": "normalization",
+      "confidence": 1.0,
+      "source": "gold",
+      "csa": [
+        "Check",
+        "LVS"
+      ],
+      "provenance": "industry abbreviation"
+    },
+    {
+      "subject": "MaxTran",
+      "relation": "also_called",
+      "object": "Max_Transition",
+      "triple_class": "normalization",
+      "confidence": 1.0,
+      "source": "gold",
+      "csa": [
+        "Constraint",
+        "MaxTran"
+      ],
+      "provenance": "SDC / library slew limits"
+    },
+    {
+      "subject": "Placement",
+      "relation": "consumes",
+      "object": "Gate_Level_Netlist",
+      "triple_class": "backbone",
+      "confidence": 0.98,
+      "source": "gold",
+      "csa": [
+        "FlowStage",
+        "Placement"
+      ],
+      "provenance": "PnR input"
+    },
+    {
+      "subject": "Placement",
+      "relation": "consumes",
+      "object": "SDC",
+      "triple_class": "backbone",
+      "confidence": 0.98,
+      "source": "gold",
+      "csa": [
+        "FlowStage",
+        "Placement"
+      ],
+      "provenance": "timing constraints"
+    },
+    {
+      "subject": "Placement",
+      "relation": "consumes",
+      "object": "Technology_LEF",
+      "triple_class": "backbone",
+      "confidence": 0.95,
+      "source": "gold",
+      "csa": [
+        "FlowStage",
+        "Placement"
+      ],
+      "provenance": "physical library"
+    },
+    {
+      "subject": "Static_Timing_Analysis",
+      "relation": "consumes",
+      "object": "SPEF_or_RCDB",
+      "triple_class": "backbone",
+      "confidence": 0.98,
+      "source": "gold",
+      "csa": [
+        "FlowStage",
+        "Static_Timing_Analysis"
+      ],
+      "provenance": "parasitic netlist"
+    },
+    {
+      "subject": "Static_Timing_Analysis",
+      "relation": "produces",
+      "object": "Timing_Report",
+      "triple_class": "backbone",
+      "confidence": 1.0,
+      "source": "gold",
+      "csa": [
+        "FlowStage",
+        "Static_Timing_Analysis"
+      ],
+      "provenance": "STA output"
+    },
+    {
+      "subject": "Routing",
+      "relation": "produces",
+      "object": "DEF_or_GDS_candidate",
+      "triple_class": "backbone",
+      "confidence": 0.9,
+      "source": "gold",
+      "csa": [
+        "FlowStage",
+        "Routing"
+      ],
+      "provenance": "routed layout"
+    },
+    {
+      "subject": "Physical_Verification",
+      "relation": "produces",
+      "object": "DRC_LVS_Reports",
+      "triple_class": "backbone",
+      "confidence": 1.0,
+      "source": "gold",
+      "csa": [
+        "FlowStage",
+        "Physical_Verification"
+      ],
+      "provenance": "PV output"
+    },
+    {
+      "subject": "Setup_Constraint",
+      "relation": "enforces",
+      "object": "NonNegative_Setup_Slack",
+      "triple_class": "backbone",
+      "confidence": 1.0,
+      "source": "gold",
+      "csa": [
+        "Constraint",
+        "Setup_Constraint"
+      ],
+      "provenance": "STA semantics"
+    },
+    {
+      "subject": "Hold_Constraint",
+      "relation": "enforces",
+      "object": "NonNegative_Hold_Slack",
+      "triple_class": "backbone",
+      "confidence": 1.0,
+      "source": "gold",
+      "csa": [
+        "Constraint",
+        "Hold_Constraint"
+      ],
+      "provenance": "STA semantics"
+    },
+    {
+      "subject": "WNS",
+      "relation": "measures",
+      "object": "Setup_Constraint",
+      "triple_class": "backbone",
+      "confidence": 0.95,
+      "source": "gold",
+      "csa": [
+        "Metric",
+        "WNS"
+      ],
+      "provenance": "WNS usually reports worst setup path; hold WNS reported separately"
+    },
+    {
+      "subject": "Max_Transition",
+      "relation": "enforces",
+      "object": "Slew_Limit",
+      "triple_class": "backbone",
+      "confidence": 0.98,
+      "source": "gold",
+      "csa": [
+        "Constraint",
+        "Max_Transition"
+      ],
+      "provenance": "library/SDC slew"
+    },
+    {
+      "subject": "Congestion_Overflow",
+      "relation": "measures",
+      "object": "Routing_Feasibility",
+      "triple_class": "backbone",
+      "confidence": 0.9,
+      "source": "gold",
+      "csa": [
+        "Metric",
+        "Congestion_Overflow"
+      ],
+      "provenance": "global route overflow metric"
+    },
+    {
+      "subject": "Design_Rule_Check",
+      "relation": "detects",
+      "object": "DRC_Violation",
+      "triple_class": "backbone",
+      "confidence": 1.0,
+      "source": "gold",
+      "csa": [
+        "Check",
+        "Design_Rule_Check"
+      ],
+      "provenance": "foundry rule deck"
+    },
+    {
+      "subject": "Layout_Versus_Schematic",
+      "relation": "detects",
+      "object": "LVS_Mismatch",
+      "triple_class": "backbone",
+      "confidence": 1.0,
+      "source": "gold",
+      "csa": [
+        "Check",
+        "Layout_Versus_Schematic"
+      ],
+      "provenance": "schematic vs layout"
+    },
+    {
+      "subject": "Antenna_Check",
+      "relation": "detects",
+      "object": "Antenna_Violation",
+      "triple_class": "backbone",
+      "confidence": 0.98,
+      "source": "gold",
+      "csa": [
+        "Check",
+        "Antenna_Check"
+      ],
+      "provenance": "process antenna rules"
+    },
+    {
+      "subject": "IR_Drop_Analysis",
+      "relation": "detects",
+      "object": "Excessive_IR_Drop",
+      "triple_class": "backbone",
+      "confidence": 0.95,
+      "source": "gold",
+      "csa": [
+        "Check",
+        "IR_Drop_Analysis"
+      ],
+      "provenance": "power integrity"
+    },
+    {
+      "subject": "EM_Analysis",
+      "relation": "detects",
+      "object": "Electromigration_Risk",
+      "triple_class": "backbone",
+      "confidence": 0.95,
+      "source": "gold",
+      "csa": [
+        "Check",
+        "EM_Analysis"
+      ],
+      "provenance": "current density limits"
+    },
+    {
+      "subject": "High_Placement_Density",
+      "relation": "causes",
+      "object": "Routing_Congestion",
+      "triple_class": "backbone",
+      "confidence": 0.9,
+      "source": "gold",
+      "csa": [
+        "FailureMode",
+        "High_Placement_Density"
+      ],
+      "provenance": "placement density \u2192 Gcell overflow"
+    },
+    {
+      "subject": "Routing_Congestion",
+      "relation": "causes",
+      "object": "Detour_Wirelength",
+      "triple_class": "backbone",
+      "confidence": 0.9,
+      "source": "gold",
+      "csa": [
+        "FailureMode",
+        "Routing_Congestion"
+      ],
+      "provenance": "detours increase RC"
+    },
+    {
+      "subject": "Detour_Wirelength",
+      "relation": "causes",
+      "object": "Setup_Violation",
+      "triple_class": "backbone",
+      "confidence": 0.85,
+      "source": "gold",
+      "csa": [
+        "FailureMode",
+        "Detour_Wirelength"
+      ],
+      "provenance": "extra delay on data path"
+    },
+    {
+      "subject": "Clock_Uncertainty_Increase",
+      "relation": "causes",
+      "object": "Setup_Violation",
+      "triple_class": "backbone",
+      "confidence": 0.9,
+      "source": "gold",
+      "csa": [
+        "FailureMode",
+        "Clock_Uncertainty_Increase"
+      ],
+      "provenance": "reduces available data path time"
+    },
+    {
+      "subject": "Large_Clock_Skew",
+      "relation": "causes",
+      "object": "Hold_Violation",
+      "triple_class": "backbone",
+      "confidence": 0.85,
+      "source": "gold",
+      "csa": [
+        "FailureMode",
+        "Large_Clock_Skew"
+      ],
+      "provenance": "short path + skew"
+    },
+    {
+      "subject": "Missing_Hold_Buffering",
+      "relation": "causes",
+      "object": "Hold_Violation",
+      "triple_class": "backbone",
+      "confidence": 0.9,
+      "source": "gold",
+      "csa": [
+        "FailureMode",
+        "Missing_Hold_Buffering"
+      ],
+      "provenance": "CTS/post-route hold fix"
+    },
+    {
+      "subject": "Long_Antenna_Ratio_Net",
+      "relation": "causes",
+      "object": "Antenna_Violation",
+      "triple_class": "backbone",
+      "confidence": 0.95,
+      "source": "gold",
+      "csa": [
+        "FailureMode",
+        "Long_Antenna_Ratio_Net"
+      ],
+      "provenance": "process antenna"
+    },
+    {
+      "subject": "Weak_Power_Grid",
+      "relation": "causes",
+      "object": "Excessive_IR_Drop",
+      "triple_class": "backbone",
+      "confidence": 0.9,
+      "source": "gold",
+      "csa": [
+        "FailureMode",
+        "Weak_Power_Grid"
+      ],
+      "provenance": "PG mesh resistance"
+    },
+    {
+      "subject": "High_Via_Resistance",
+      "relation": "causes",
+      "object": "Excessive_IR_Drop",
+      "triple_class": "backbone",
+      "confidence": 0.8,
+      "source": "gold",
+      "csa": [
+        "FailureMode",
+        "High_Via_Resistance"
+      ],
+      "provenance": "via stack / sparse vias"
+    },
+    {
+      "subject": "Cell_Padding_or_Density_Screen",
+      "relation": "mitigates",
+      "object": "High_Placement_Density",
+      "triple_class": "backbone",
+      "confidence": 0.85,
+      "source": "gold",
+      "csa": [
+        "Action",
+        "Cell_Padding_or_Density_Screen"
+      ],
+      "provenance": "placement controls"
+    },
+    {
+      "subject": "Layer_Promotion_or_NDR",
+      "relation": "mitigates",
+      "object": "Routing_Congestion",
+      "triple_class": "backbone",
+      "confidence": 0.8,
+      "source": "gold",
+      "csa": [
+        "Action",
+        "Layer_Promotion_or_NDR"
+      ],
+      "provenance": "routing strategy"
+    },
+    {
+      "subject": "Buffer_Insertion_or_Upsize",
+      "relation": "mitigates",
+      "object": "Setup_Violation",
+      "triple_class": "backbone",
+      "confidence": 0.9,
+      "source": "gold",
+      "csa": [
+        "Action",
+        "Buffer_Insertion_or_Upsize"
+      ],
+      "provenance": "timing ECO"
+    },
+    {
+      "subject": "Hold_Buffer_Insertion",
+      "relation": "mitigates",
+      "object": "Hold_Violation",
+      "triple_class": "backbone",
+      "confidence": 0.95,
+      "source": "gold",
+      "csa": [
+        "Action",
+        "Hold_Buffer_Insertion"
+      ],
+      "provenance": "hold ECO"
+    },
+    {
+      "subject": "Antenna_Diode_or_Layer_Hop",
+      "relation": "mitigates",
+      "object": "Antenna_Violation",
+      "triple_class": "backbone",
+      "confidence": 0.95,
+      "source": "gold",
+      "csa": [
+        "Action",
+        "Antenna_Diode_or_Layer_Hop"
+      ],
+      "provenance": "antenna fix"
+    },
+    {
+      "subject": "Widen_Straps_or_Add_Vias",
+      "relation": "mitigates",
+      "object": "Excessive_IR_Drop",
+      "triple_class": "backbone",
+      "confidence": 0.9,
+      "source": "gold",
+      "csa": [
+        "Action",
+        "Widen_Straps_or_Add_Vias"
+      ],
+      "provenance": "PG reinforcement"
+    },
+    {
+      "subject": "Setup_Violation",
+      "relation": "when",
+      "object": "Late_Data_or_Early_Clock",
+      "triple_class": "auxiliary",
+      "confidence": 0.95,
+      "source": "gold",
+      "csa": [
+        "FailureMode",
+        "Setup_Violation"
+      ],
+      "provenance": "setup timing equation"
+    },
+    {
+      "subject": "Hold_Violation",
+      "relation": "when",
+      "object": "Early_Data_or_Late_Clock",
+      "triple_class": "auxiliary",
+      "confidence": 0.95,
+      "source": "gold",
+      "csa": [
+        "FailureMode",
+        "Hold_Violation"
+      ],
+      "provenance": "hold timing equation"
+    },
+    {
+      "subject": "Buffer_Insertion_or_Upsize",
+      "relation": "qualified_by",
+      "object": "Setup_Violation",
+      "triple_class": "linking",
+      "confidence": 0.9,
+      "source": "gold",
+      "csa": [
+        "Action",
+        "Buffer_Insertion_or_Upsize"
+      ],
+      "provenance": "mitigation linked to failure"
+    },
+    {
+      "subject": "Static_Timing_Analysis",
+      "relation": "typically_after",
+      "object": "RC_Extraction",
+      "triple_class": "auxiliary",
+      "confidence": 0.95,
+      "source": "gold",
+      "csa": [
+        "FlowStage",
+        "Static_Timing_Analysis"
+      ],
+      "provenance": "signoff STA needs parasitics"
+    },
+    {
+      "subject": "Hold_Fix",
+      "relation": "typically_after",
+      "object": "Clock_Tree_Synthesis",
+      "triple_class": "auxiliary",
+      "confidence": 0.85,
+      "source": "gold",
+      "csa": [
+        "Action",
+        "Hold_Fix"
+      ],
+      "provenance": "skew known after CTS; some hold during place"
+    },
+    {
+      "subject": "StdCell",
+      "relation": "is_a",
+      "object": "PhysicalObject",
+      "triple_class": "backbone",
+      "confidence": 1.0,
+      "source": "gold",
+      "csa": [
+        "PhysicalObject",
+        "StdCell"
+      ],
+      "provenance": "ontology"
+    },
+    {
+      "subject": "Macro",
+      "relation": "is_a",
+      "object": "PhysicalObject",
+      "triple_class": "backbone",
+      "confidence": 1.0,
+      "source": "gold",
+      "csa": [
+        "PhysicalObject",
+        "Macro"
+      ],
+      "provenance": "ontology"
+    },
+    {
+      "subject": "Via",
+      "relation": "part_of",
+      "object": "Interconnect_Stack",
+      "triple_class": "backbone",
+      "confidence": 0.95,
+      "source": "gold",
+      "csa": [
+        "PhysicalObject",
+        "Via"
+      ],
+      "provenance": "BEOL"
+    },
+    {
+      "subject": "Power_Strap",
+      "relation": "part_of",
+      "object": "Power_Grid",
+      "triple_class": "backbone",
+      "confidence": 0.95,
+      "source": "gold",
+      "csa": [
+        "PhysicalObject",
+        "Power_Strap"
+      ],
+      "provenance": "PG structure"
+    },
+    {
+      "subject": "Implementation_Tool",
+      "relation": "detects",
+      "object": "Routing_Congestion",
+      "triple_class": "backbone",
+      "confidence": 0.9,
+      "source": "gold",
+      "csa": [
+        "ToolClass",
+        "Implementation_Tool"
+      ],
+      "provenance": "cong maps in PnR"
+    },
+    {
+      "subject": "STA_Tool",
+      "relation": "detects",
+      "object": "Setup_Violation",
+      "triple_class": "backbone",
+      "confidence": 1.0,
+      "source": "gold",
+      "csa": [
+        "ToolClass",
+        "STA_Tool"
+      ],
+      "provenance": "timing reports"
+    },
+    {
+      "subject": "STA_Tool",
+      "relation": "detects",
+      "object": "Hold_Violation",
+      "triple_class": "backbone",
+      "confidence": 1.0,
+      "source": "gold",
+      "csa": [
+        "ToolClass",
+        "STA_Tool"
+      ],
+      "provenance": "timing reports"
+    },
+    {
+      "subject": "Extraction_Tool",
+      "relation": "produces",
+      "object": "SPEF_or_RCDB",
+      "triple_class": "backbone",
+      "confidence": 0.98,
+      "source": "gold",
+      "csa": [
+        "ToolClass",
+        "Extraction_Tool"
+      ],
+      "provenance": "RC extraction"
+    },
+    {
+      "subject": "Physical_Verification_Tool",
+      "relation": "detects",
+      "object": "DRC_Violation",
+      "triple_class": "backbone",
+      "confidence": 1.0,
+      "source": "gold",
+      "csa": [
+        "ToolClass",
+        "Physical_Verification_Tool"
+      ],
+      "provenance": "DRC engine"
+    },
+    {
+      "subject": "Floorplan",
+      "relation": "typically_before",
+      "object": "Placement",
+      "triple_class": "auxiliary",
+      "confidence": 0.65,
+      "source": "auto:pd_flow_overview",
+      "csa": [
+        "FlowStage",
+        "Floorplan"
+      ],
+      "provenance": "Floorplan defines the die outline, core area, and macro placement regions before detailed placement."
+    },
+    {
+      "subject": "RC_Extraction",
+      "relation": "typically_after",
+      "object": "Routing",
+      "triple_class": "auxiliary",
+      "confidence": 0.65,
+      "source": "auto:pd_flow_overview",
+      "csa": [
+        "FlowStage",
+        "RC_Extraction"
+      ],
+      "provenance": "RC extraction computes parasitic resistance and capacitance for each net after routing."
+    },
+    {
+      "subject": "Physical_Verification",
+      "relation": "typically_before",
+      "object": "Signoff",
+      "triple_class": "auxiliary",
+      "confidence": 0.65,
+      "source": "auto:pd_flow_overview",
+      "csa": [
+        "FlowStage",
+        "Physical_Verification"
+      ],
+      "provenance": "Physical verification runs DRC, LVS, and antenna checks before signoff."
+    },
+    {
+      "subject": "Routing_Congestion",
+      "relation": "when",
+      "object": "Detour_Wirelength",
+      "triple_class": "auxiliary",
+      "confidence": 0.6,
+      "source": "auto:timing_causality",
+      "csa": [
+        "FailureMode",
+        "Routing_Congestion"
+      ],
+      "provenance": "Routing congestion causes detours that increase wirelength and net capacitance."
+    },
+    {
+      "subject": "Routing_Congestion",
+      "relation": "qualified_by",
+      "object": "Detour_Wirelength",
+      "triple_class": "linking",
+      "confidence": 0.6,
+      "source": "auto:timing_causality",
+      "csa": [
+        "FailureMode",
+        "Routing_Congestion"
+      ],
+      "provenance": "Routing congestion causes detours that increase wirelength and net capacitance."
+    },
+    {
+      "subject": "Hold_Buffer_Insertion",
+      "relation": "typically_after",
+      "object": "Buffer_Insertion_or_Upsize",
+      "triple_class": "auxiliary",
+      "confidence": 0.65,
+      "source": "auto:timing_causality",
+      "csa": [
+        "Action",
+        "Hold_Buffer_Insertion"
+      ],
+      "provenance": "Missing hold buffers after CTS commonly leave short paths failing hold."
+    },
+    {
+      "subject": "Design_Rule_Check",
+      "relation": "detects",
+      "object": "Clock_Tree_Synthesis",
+      "triple_class": "backbone",
+      "confidence": 0.8,
+      "source": "auto:signoff_checks",
+      "csa": [
+        "Check",
+        "Design_Rule_Check"
+      ],
+      "provenance": "Design rule check detects spacing, width, and via rule violations against the foundry deck."
+    },
+    {
+      "subject": "Layout_Versus_Schematic",
+      "relation": "detects",
+      "object": "Clock_Tree_Synthesis",
+      "triple_class": "backbone",
+      "confidence": 0.8,
+      "source": "auto:signoff_checks",
+      "csa": [
+        "Check",
+        "Layout_Versus_Schematic"
+      ],
+      "provenance": "Layout versus schematic detects mismatches between the netlist and the drawn layout."
+    },
+    {
+      "subject": "Antenna_Violation",
+      "relation": "detects",
+      "object": "Clock_Tree_Synthesis",
+      "triple_class": "backbone",
+      "confidence": 0.8,
+      "source": "auto:signoff_checks",
+      "csa": [
+        "FailureMode",
+        "Antenna_Violation"
+      ],
+      "provenance": "Antenna check detects process antenna ratio violations on long metal shapes attached to gates."
+    },
+    {
+      "subject": "Antenna_Violation",
+      "relation": "mitigates",
+      "object": "Antenna_Diode_or_Layer_Hop",
+      "triple_class": "backbone",
+      "confidence": 0.8,
+      "source": "auto:signoff_checks",
+      "csa": [
+        "FailureMode",
+        "Antenna_Violation"
+      ],
+      "provenance": "An antenna diode or a layer hop mitigates antenna violations."
+    },
+    {
+      "subject": "Power_Grid",
+      "relation": "detects",
+      "object": "Excessive_IR_Drop",
+      "triple_class": "backbone",
+      "confidence": 0.8,
+      "source": "auto:signoff_checks",
+      "csa": [
+        "PhysicalObject",
+        "Power_Grid"
+      ],
+      "provenance": "IR drop analysis detects excessive voltage drop on the power grid under switching demand."
+    }
+  ],
+  "stats": {
+    "nodes": 76,
+    "edges": 73,
+    "by_triple_class": {
+      "backbone": 54,
+      "normalization": 8,
+      "auxiliary": 9,
+      "linking": 2
+    },
+    "by_source": {
+      "gold": 62,
+      "auto": 11
+    }
+  },
+  "validation_issues": [],
+  "auto_docs": [
+    {
+      "doc_id": "pd_flow_overview",
+      "n_irs": 8,
+      "n_triples": 4
+    },
+    {
+      "doc_id": "timing_causality",
+      "n_irs": 7,
+      "n_triples": 9
+    },
+    {
+      "doc_id": "signoff_checks",
+      "n_irs": 6,
+      "n_triples": 10
+    }
+  ]
+}

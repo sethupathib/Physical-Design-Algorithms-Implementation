@@ -1,0 +1,91 @@
+# Gold curated PD knowledge triples.
+# Each triple: [subject, relation, object, meta]
+# meta fields: s_type, o_type, triple_class (backbone|auxiliary|linking|normalization),
+#              csa, confidence (0-1), provenance, notes
+#
+# Accuracy: these are standard physical-design methodology facts
+# (flow ordering, constraint semantics, common causal chains).
+# They are NOT Synopsys/Cadence product claims and not ChipMind paper numbers.
+
+triples:
+  # ---- Flow backbone (typical digital PnR) ----
+  - [Floorplan, precedes_in_flow, Power_Planning, {s_type: FlowStage, o_type: FlowStage, triple_class: backbone, csa: [FlowStage, Floorplan], confidence: 0.95, provenance: "standard digital PnR flow", notes: "Macro/placement outline before detailed PG mesh in many flows; some teams co-optimize."}]
+  - [Power_Planning, precedes_in_flow, Placement, {s_type: FlowStage, o_type: FlowStage, triple_class: backbone, csa: [FlowStage, Power_Planning], confidence: 0.9, provenance: "standard digital PnR flow"}]
+  - [Placement, precedes_in_flow, Clock_Tree_Synthesis, {s_type: FlowStage, o_type: FlowStage, triple_class: backbone, csa: [FlowStage, Placement], confidence: 0.98, provenance: "standard digital PnR flow"}]
+  - [Clock_Tree_Synthesis, precedes_in_flow, Routing, {s_type: FlowStage, o_type: FlowStage, triple_class: backbone, csa: [FlowStage, Clock_Tree_Synthesis], confidence: 0.98, provenance: "standard digital PnR flow"}]
+  - [Routing, precedes_in_flow, RC_Extraction, {s_type: FlowStage, o_type: FlowStage, triple_class: backbone, csa: [FlowStage, Routing], confidence: 0.95, provenance: "signoff path after route"}]
+  - [RC_Extraction, precedes_in_flow, Static_Timing_Analysis, {s_type: FlowStage, o_type: FlowStage, triple_class: backbone, csa: [FlowStage, RC_Extraction], confidence: 0.95, provenance: "SPEF/RC feeds STA"}]
+  - [Static_Timing_Analysis, precedes_in_flow, Physical_Verification, {s_type: FlowStage, o_type: FlowStage, triple_class: backbone, csa: [FlowStage, Static_Timing_Analysis], confidence: 0.85, provenance: "often parallel with PV; ordering varies by methodology"}]
+  - [Physical_Verification, precedes_in_flow, Signoff, {s_type: FlowStage, o_type: FlowStage, triple_class: backbone, csa: [FlowStage, Physical_Verification], confidence: 0.9, provenance: "DRC/LVS/antenna before tapeout gate"}]
+
+  # ---- Aliases / normalization ----
+  - [CTS, same_as, Clock_Tree_Synthesis, {s_type: FlowStage, o_type: FlowStage, triple_class: normalization, csa: [FlowStage, CTS], confidence: 1.0, provenance: "industry abbreviation"}]
+  - [STA, same_as, Static_Timing_Analysis, {s_type: FlowStage, o_type: FlowStage, triple_class: normalization, csa: [FlowStage, STA], confidence: 1.0, provenance: "industry abbreviation"}]
+  - [PnR, also_called, Place_and_Route, {s_type: FlowStage, o_type: FlowStage, triple_class: normalization, csa: [FlowStage, PnR], confidence: 1.0, provenance: "industry abbreviation"}]
+  - [WNS, also_called, Worst_Negative_Slack, {s_type: Metric, o_type: Metric, triple_class: normalization, csa: [Metric, WNS], confidence: 1.0, provenance: "timing report nomenclature"}]
+  - [TNS, also_called, Total_Negative_Slack, {s_type: Metric, o_type: Metric, triple_class: normalization, csa: [Metric, TNS], confidence: 1.0, provenance: "timing report nomenclature"}]
+  - [DRC, same_as, Design_Rule_Check, {s_type: Check, o_type: Check, triple_class: normalization, csa: [Check, DRC], confidence: 1.0, provenance: "industry abbreviation"}]
+  - [LVS, same_as, Layout_Versus_Schematic, {s_type: Check, o_type: Check, triple_class: normalization, csa: [Check, LVS], confidence: 1.0, provenance: "industry abbreviation"}]
+  - [MaxTran, also_called, Max_Transition, {s_type: Constraint, o_type: Constraint, triple_class: normalization, csa: [Constraint, MaxTran], confidence: 1.0, provenance: "SDC / library slew limits"}]
+
+  # ---- Inputs / outputs ----
+  - [Placement, consumes, Gate_Level_Netlist, {s_type: FlowStage, o_type: InputArtifact, triple_class: backbone, csa: [FlowStage, Placement], confidence: 0.98, provenance: "PnR input"}]
+  - [Placement, consumes, SDC, {s_type: FlowStage, o_type: InputArtifact, triple_class: backbone, csa: [FlowStage, Placement], confidence: 0.98, provenance: "timing constraints"}]
+  - [Placement, consumes, Technology_LEF, {s_type: FlowStage, o_type: InputArtifact, triple_class: backbone, csa: [FlowStage, Placement], confidence: 0.95, provenance: "physical library"}]
+  - [Static_Timing_Analysis, consumes, SPEF_or_RCDB, {s_type: FlowStage, o_type: InputArtifact, triple_class: backbone, csa: [FlowStage, Static_Timing_Analysis], confidence: 0.98, provenance: "parasitic netlist"}]
+  - [Static_Timing_Analysis, produces, Timing_Report, {s_type: FlowStage, o_type: OutputArtifact, triple_class: backbone, csa: [FlowStage, Static_Timing_Analysis], confidence: 1.0, provenance: "STA output"}]
+  - [Routing, produces, DEF_or_GDS_candidate, {s_type: FlowStage, o_type: OutputArtifact, triple_class: backbone, csa: [FlowStage, Routing], confidence: 0.9, provenance: "routed layout"}]
+  - [Physical_Verification, produces, DRC_LVS_Reports, {s_type: FlowStage, o_type: OutputArtifact, triple_class: backbone, csa: [FlowStage, Physical_Verification], confidence: 1.0, provenance: "PV output"}]
+
+  # ---- Metrics & constraints ----
+  - [Setup_Constraint, enforces, NonNegative_Setup_Slack, {s_type: Constraint, o_type: Metric, triple_class: backbone, csa: [Constraint, Setup_Constraint], confidence: 1.0, provenance: "STA semantics"}]
+  - [Hold_Constraint, enforces, NonNegative_Hold_Slack, {s_type: Constraint, o_type: Metric, triple_class: backbone, csa: [Constraint, Hold_Constraint], confidence: 1.0, provenance: "STA semantics"}]
+  - [WNS, measures, Setup_Constraint, {s_type: Metric, o_type: Constraint, triple_class: backbone, csa: [Metric, WNS], confidence: 0.95, provenance: "WNS usually reports worst setup path; hold WNS reported separately"}]
+  - [Max_Transition, enforces, Slew_Limit, {s_type: Constraint, o_type: Metric, triple_class: backbone, csa: [Constraint, Max_Transition], confidence: 0.98, provenance: "library/SDC slew"}]
+  - [Congestion_Overflow, measures, Routing_Feasibility, {s_type: Metric, o_type: Constraint, triple_class: backbone, csa: [Metric, Congestion_Overflow], confidence: 0.9, provenance: "global route overflow metric"}]
+
+  # ---- Checks ----
+  - [Design_Rule_Check, detects, DRC_Violation, {s_type: Check, o_type: FailureMode, triple_class: backbone, csa: [Check, Design_Rule_Check], confidence: 1.0, provenance: "foundry rule deck"}]
+  - [Layout_Versus_Schematic, detects, LVS_Mismatch, {s_type: Check, o_type: FailureMode, triple_class: backbone, csa: [Check, Layout_Versus_Schematic], confidence: 1.0, provenance: "schematic vs layout"}]
+  - [Antenna_Check, detects, Antenna_Violation, {s_type: Check, o_type: FailureMode, triple_class: backbone, csa: [Check, Antenna_Check], confidence: 0.98, provenance: "process antenna rules"}]
+  - [IR_Drop_Analysis, detects, Excessive_IR_Drop, {s_type: Check, o_type: FailureMode, triple_class: backbone, csa: [Check, IR_Drop_Analysis], confidence: 0.95, provenance: "power integrity"}]
+  - [EM_Analysis, detects, Electromigration_Risk, {s_type: Check, o_type: FailureMode, triple_class: backbone, csa: [Check, EM_Analysis], confidence: 0.95, provenance: "current density limits"}]
+
+  # ---- Causal chains (methodology — high value for multi-hop) ----
+  - [High_Placement_Density, causes, Routing_Congestion, {s_type: FailureMode, o_type: FailureMode, triple_class: backbone, csa: [FailureMode, High_Placement_Density], confidence: 0.9, provenance: "placement density → Gcell overflow"}]
+  - [Routing_Congestion, causes, Detour_Wirelength, {s_type: FailureMode, o_type: FailureMode, triple_class: backbone, csa: [FailureMode, Routing_Congestion], confidence: 0.9, provenance: "detours increase RC"}]
+  - [Detour_Wirelength, causes, Setup_Violation, {s_type: FailureMode, o_type: FailureMode, triple_class: backbone, csa: [FailureMode, Detour_Wirelength], confidence: 0.85, provenance: "extra delay on data path"}]
+  - [Clock_Uncertainty_Increase, causes, Setup_Violation, {s_type: FailureMode, o_type: FailureMode, triple_class: backbone, csa: [FailureMode, Clock_Uncertainty_Increase], confidence: 0.9, provenance: "reduces available data path time"}]
+  - [Large_Clock_Skew, causes, Hold_Violation, {s_type: FailureMode, o_type: FailureMode, triple_class: backbone, csa: [FailureMode, Large_Clock_Skew], confidence: 0.85, provenance: "short path + skew"}]
+  - [Missing_Hold_Buffering, causes, Hold_Violation, {s_type: FailureMode, o_type: FailureMode, triple_class: backbone, csa: [FailureMode, Missing_Hold_Buffering], confidence: 0.9, provenance: "CTS/post-route hold fix"}]
+  - [Long_Antenna_Ratio_Net, causes, Antenna_Violation, {s_type: FailureMode, o_type: FailureMode, triple_class: backbone, csa: [FailureMode, Long_Antenna_Ratio_Net], confidence: 0.95, provenance: "process antenna"}]
+  - [Weak_Power_Grid, causes, Excessive_IR_Drop, {s_type: FailureMode, o_type: FailureMode, triple_class: backbone, csa: [FailureMode, Weak_Power_Grid], confidence: 0.9, provenance: "PG mesh resistance"}]
+  - [High_Via_Resistance, causes, Excessive_IR_Drop, {s_type: FailureMode, o_type: FailureMode, triple_class: backbone, csa: [FailureMode, High_Via_Resistance], confidence: 0.8, provenance: "via stack / sparse vias"}]
+
+  # ---- Mitigations ----
+  - [Cell_Padding_or_Density_Screen, mitigates, High_Placement_Density, {s_type: Action, o_type: FailureMode, triple_class: backbone, csa: [Action, Cell_Padding_or_Density_Screen], confidence: 0.85, provenance: "placement controls"}]
+  - [Layer_Promotion_or_NDR, mitigates, Routing_Congestion, {s_type: Action, o_type: FailureMode, triple_class: backbone, csa: [Action, Layer_Promotion_or_NDR], confidence: 0.8, provenance: "routing strategy"}]
+  - [Buffer_Insertion_or_Upsize, mitigates, Setup_Violation, {s_type: Action, o_type: FailureMode, triple_class: backbone, csa: [Action, Buffer_Insertion_or_Upsize], confidence: 0.9, provenance: "timing ECO"}]
+  - [Hold_Buffer_Insertion, mitigates, Hold_Violation, {s_type: Action, o_type: FailureMode, triple_class: backbone, csa: [Action, Hold_Buffer_Insertion], confidence: 0.95, provenance: "hold ECO"}]
+  - [Antenna_Diode_or_Layer_Hop, mitigates, Antenna_Violation, {s_type: Action, o_type: FailureMode, triple_class: backbone, csa: [Action, Antenna_Diode_or_Layer_Hop], confidence: 0.95, provenance: "antenna fix"}]
+  - [Widen_Straps_or_Add_Vias, mitigates, Excessive_IR_Drop, {s_type: Action, o_type: FailureMode, triple_class: backbone, csa: [Action, Widen_Straps_or_Add_Vias], confidence: 0.9, provenance: "PG reinforcement"}]
+
+  # ---- Auxiliary / linking examples (ChipMind T_A / T_L) ----
+  - [Setup_Violation, when, Late_Data_or_Early_Clock, {s_type: FailureMode, o_type: FailureMode, triple_class: auxiliary, csa: [FailureMode, Setup_Violation], confidence: 0.95, provenance: "setup timing equation"}]
+  - [Hold_Violation, when, Early_Data_or_Late_Clock, {s_type: FailureMode, o_type: FailureMode, triple_class: auxiliary, csa: [FailureMode, Hold_Violation], confidence: 0.95, provenance: "hold timing equation"}]
+  - [Buffer_Insertion_or_Upsize, qualified_by, Setup_Violation, {s_type: Action, o_type: FailureMode, triple_class: linking, csa: [Action, Buffer_Insertion_or_Upsize], confidence: 0.9, provenance: "mitigation linked to failure"}]
+  - [Static_Timing_Analysis, typically_after, RC_Extraction, {s_type: FlowStage, o_type: FlowStage, triple_class: auxiliary, csa: [FlowStage, Static_Timing_Analysis], confidence: 0.95, provenance: "signoff STA needs parasitics"}]
+  - [Hold_Fix, typically_after, Clock_Tree_Synthesis, {s_type: Action, o_type: FlowStage, triple_class: auxiliary, csa: [Action, Hold_Fix], confidence: 0.85, provenance: "skew known after CTS; some hold during place"}]
+
+  # ---- Physical objects ----
+  - [StdCell, is_a, PhysicalObject, {s_type: PhysicalObject, o_type: PhysicalObject, triple_class: backbone, csa: [PhysicalObject, StdCell], confidence: 1.0, provenance: "ontology"}]
+  - [Macro, is_a, PhysicalObject, {s_type: PhysicalObject, o_type: PhysicalObject, triple_class: backbone, csa: [PhysicalObject, Macro], confidence: 1.0, provenance: "ontology"}]
+  - [Via, part_of, Interconnect_Stack, {s_type: PhysicalObject, o_type: PhysicalObject, triple_class: backbone, csa: [PhysicalObject, Via], confidence: 0.95, provenance: "BEOL"}]
+  - [Power_Strap, part_of, Power_Grid, {s_type: PhysicalObject, o_type: PhysicalObject, triple_class: backbone, csa: [PhysicalObject, Power_Strap], confidence: 0.95, provenance: "PG structure"}]
+
+  # ---- Vendor-neutral tool classes ----
+  - [Implementation_Tool, detects, Routing_Congestion, {s_type: ToolClass, o_type: FailureMode, triple_class: backbone, csa: [ToolClass, Implementation_Tool], confidence: 0.9, provenance: "cong maps in PnR"}]
+  - [STA_Tool, detects, Setup_Violation, {s_type: ToolClass, o_type: FailureMode, triple_class: backbone, csa: [ToolClass, STA_Tool], confidence: 1.0, provenance: "timing reports"}]
+  - [STA_Tool, detects, Hold_Violation, {s_type: ToolClass, o_type: FailureMode, triple_class: backbone, csa: [ToolClass, STA_Tool], confidence: 1.0, provenance: "timing reports"}]
+  - [Extraction_Tool, produces, SPEF_or_RCDB, {s_type: ToolClass, o_type: OutputArtifact, triple_class: backbone, csa: [ToolClass, Extraction_Tool], confidence: 0.98, provenance: "RC extraction"}]
+  - [Physical_Verification_Tool, detects, DRC_Violation, {s_type: ToolClass, o_type: FailureMode, triple_class: backbone, csa: [ToolClass, Physical_Verification_Tool], confidence: 1.0, provenance: "DRC engine"}]

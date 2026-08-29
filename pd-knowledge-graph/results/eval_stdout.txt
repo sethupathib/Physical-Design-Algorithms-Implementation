@@ -1,0 +1,7 @@
+{
+  "n_questions": 6,
+  "avg_atomic_f1_proxy": 1.0,
+  "avg_entity_recall": 1.0,
+  "all_path_ok": true,
+  "claim_note": "Offline Atomic-F1 proxy over curated gold facts \u2014 NOT ChipMind SpecEval numbers (ChipMind reports 0.95 F1 on SpecEval-QA with LLM judges)."
+}

@@ -1,0 +1,38 @@
+# Sample PD methodology corpus for ChipMind-style extraction demos.
+# Text is pedagogical (accurate methodology language), not a vendor manual.
+
+---
+id: pd_flow_overview
+title: Digital place-and-route flow overview
+sentences:
+  - "Floorplan defines the die outline, core area, and macro placement regions before detailed placement."
+  - "Power planning builds the power grid straps and rings that supply standard cells and macros."
+  - "Placement assigns standard cells to legal sites while honoring timing, density, and congestion objectives."
+  - "Clock tree synthesis inserts buffers and routes clock nets to meet skew and insertion delay targets."
+  - "Routing connects signal nets on metal layers subject to design rules and congestion maps."
+  - "RC extraction computes parasitic resistance and capacitance for each net after routing."
+  - "Static timing analysis evaluates setup and hold slack using extracted parasitics and SDC constraints."
+  - "Physical verification runs DRC, LVS, and antenna checks before signoff."
+
+---
+id: timing_causality
+title: Timing failure causality
+sentences:
+  - "If placement density is too high, global routing reports congestion overflow in gcells."
+  - "Routing congestion causes detours that increase wirelength and net capacitance."
+  - "Increased detour wirelength increases data-path delay and can create setup violations."
+  - "Large clock skew on a short data path can create hold violations."
+  - "Missing hold buffers after CTS commonly leave short paths failing hold."
+  - "When setup fails, engineers typically insert buffers or upsize cells on the critical path."
+  - "When hold fails, engineers insert hold buffers to add delay on the short path."
+
+---
+id: signoff_checks
+title: Signoff checks
+sentences:
+  - "Design rule check detects spacing, width, and via rule violations against the foundry deck."
+  - "Layout versus schematic detects mismatches between the netlist and the drawn layout."
+  - "Antenna check detects process antenna ratio violations on long metal shapes attached to gates."
+  - "An antenna diode or a layer hop mitigates antenna violations."
+  - "IR drop analysis detects excessive voltage drop on the power grid under switching demand."
+  - "Widening straps or adding vias mitigates excessive IR drop."

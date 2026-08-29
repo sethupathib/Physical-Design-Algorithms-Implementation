@@ -1,0 +1,62 @@
+# PDKG evaluation questions — atomic-fact style inspired by ChipMind SpecEval-QA / Atomic-ROUGE.
+# Gold answers are grounded ONLY in gold_triples.yaml (not free-form LLM prose).
+
+questions:
+  - id: q1_flow_place_cts
+    type: flow_order
+    hops: 1
+    question: "What stage typically follows Placement in a digital PnR flow?"
+    csa: [FlowStage, Placement]
+    atomic_facts:
+      - "Placement precedes_in_flow Clock_Tree_Synthesis"
+    answer_entities: [Clock_Tree_Synthesis, CTS]
+
+  - id: q2_cong_to_setup
+    type: causal_multihop
+    hops: 3
+    question: "How can high placement density lead to a setup violation?"
+    csa: [FailureMode, High_Placement_Density]
+    atomic_facts:
+      - "High_Placement_Density causes Routing_Congestion"
+      - "Routing_Congestion causes Detour_Wirelength"
+      - "Detour_Wirelength causes Setup_Violation"
+    answer_entities: [Routing_Congestion, Detour_Wirelength, Setup_Violation]
+    path_start: High_Placement_Density
+    path_goal: Setup_Violation
+
+  - id: q3_hold_mitigation
+    type: mitigation
+    hops: 1
+    question: "What action mitigates a hold violation?"
+    csa: [FailureMode, Hold_Violation]
+    atomic_facts:
+      - "Hold_Buffer_Insertion mitigates Hold_Violation"
+    answer_entities: [Hold_Buffer_Insertion]
+
+  - id: q4_sta_consumes
+    type: artifact
+    hops: 1
+    question: "What parasitic artifact does STA consume?"
+    csa: [FlowStage, Static_Timing_Analysis]
+    atomic_facts:
+      - "Static_Timing_Analysis consumes SPEF_or_RCDB"
+    answer_entities: [SPEF_or_RCDB]
+
+  - id: q5_antenna
+    type: check_mitigation
+    hops: 2
+    question: "What check detects antenna issues and what mitigates them?"
+    csa: [Check, Antenna_Check]
+    atomic_facts:
+      - "Antenna_Check detects Antenna_Violation"
+      - "Antenna_Diode_or_Layer_Hop mitigates Antenna_Violation"
+    answer_entities: [Antenna_Check, Antenna_Violation, Antenna_Diode_or_Layer_Hop]
+
+  - id: q6_wns_alias
+    type: normalization
+    hops: 1
+    question: "What is WNS also called?"
+    csa: [Metric, WNS]
+    atomic_facts:
+      - "WNS also_called Worst_Negative_Slack"
+    answer_entities: [Worst_Negative_Slack]

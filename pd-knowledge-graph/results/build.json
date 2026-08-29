@@ -1,0 +1,18 @@
+{
+  "wrote": "/workspace/pd-knowledge-graph/kg/pdkg.json",
+  "stats": {
+    "nodes": 76,
+    "edges": 73,
+    "by_triple_class": {
+      "backbone": 54,
+      "normalization": 8,
+      "auxiliary": 9,
+      "linking": 2
+    },
+    "by_source": {
+      "gold": 62,
+      "auto": 11
+    }
+  },
+  "issues": []
+}
