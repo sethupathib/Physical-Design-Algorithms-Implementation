@@ -1,0 +1,32 @@
+========================================================================
+SUMMARY — io_uring vs POSIX for FC-shaped I/O
+========================================================================
+
+SCOPE
+  NOT Synopsys Fusion Compiler internals (closed binary).
+  Measures wrappers / deck stage-in / log+lib hydrate patterns.
+  FC wall time improves only when the job is I/O-bound on these paths.
+
+backend          subset           median_s      MiB/s   nfiles
+iouring          large_files        0.0139    13804.0        6
+iouring          mixed              0.0292     7633.3     4006
+iouring          small_files        0.0163     1913.1     4000
+iouring_openat   large_files        0.0130    14740.5        6
+iouring_openat   mixed              0.0322     6938.5     4006
+iouring_openat   small_files        0.0186     1682.6     4000
+posix            large_files        0.0144    13316.7        6
+posix            mixed              0.0231     9675.3     4006
+posix            small_files        0.0085     3683.4     4000
+
+Speedup vs posix (posix_median / backend_median), >1 = faster than posix:
+  small_files     iouring           0.519x
+  small_files     iouring_openat    0.457x
+  large_files     iouring           1.037x
+  large_files     iouring_openat    1.107x
+  mixed           iouring           0.789x
+  mixed           iouring_openat    0.717x
+
+CLAIM_GATE
+  CITEABLE=yes_iouring_small_win
+  Never claim 'FC got Xx faster' — claim 'stage-in/hydrate path improved'.
+========================================================================
