@@ -1,5 +1,7 @@
 # io_uring for Fusion Compiler workflows
 
+**Detailed write-up:** [`WHITEPAPER.md`](./WHITEPAPER.md) · PDF [`docs/iouring_fc_io_whitepaper.pdf`](./docs/iouring_fc_io_whitepaper.pdf) · [`DEFEND_QA.md`](./DEFEND_QA.md)
+
 ## Honest scope
 
 Synopsys **Fusion Compiler is a closed binary**. You cannot recompile it against `io_uring`.

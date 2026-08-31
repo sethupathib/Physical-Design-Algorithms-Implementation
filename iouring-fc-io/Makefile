@@ -5,7 +5,7 @@ LDFLAGS ?= -luring
 ROOT := $(abspath .)
 BIN := $(ROOT)/build
 
-.PHONY: all clean bench dataset compare
+.PHONY: all clean bench dataset compare figures pdf gif all-docs
 
 all: $(BIN)/fc_io_bench
 
@@ -21,6 +21,17 @@ bench: all
 
 compare: all
 	bash examples/compare_all.sh
+
+figures:
+	python3 docs/gen_figures.py
+
+gif:
+	python3 demo/gen_gif.py
+
+pdf:
+	python3 docs/build_whitepaper_pdf.py
+
+all-docs: figures gif pdf
 
 clean:
 	rm -rf $(BIN)

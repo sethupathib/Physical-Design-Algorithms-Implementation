@@ -1,1 +1,1 @@
-CITEABLE=yes_iouring_small_win
+CITEABLE=yes_iouring_win

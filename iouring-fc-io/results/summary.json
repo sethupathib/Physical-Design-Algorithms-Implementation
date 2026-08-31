@@ -1,14 +1,14 @@
 {
   "medians_sec": {
-    "iouring:large_files": 0.013909,
-    "iouring:mixed": 0.029247,
-    "iouring:small_files": 0.016335,
-    "iouring_openat:large_files": 0.013025,
-    "iouring_openat:mixed": 0.032176,
-    "iouring_openat:small_files": 0.018573,
-    "posix:large_files": 0.014418,
-    "posix:mixed": 0.023074,
-    "posix:small_files": 0.008484
+    "iouring:large_files": 0.01924,
+    "iouring:mixed": 0.030311,
+    "iouring:small_files": 0.015783,
+    "iouring_openat:large_files": 0.015645,
+    "iouring_openat:mixed": 0.032174,
+    "iouring_openat:small_files": 0.018452,
+    "posix:large_files": 0.018725,
+    "posix:mixed": 0.026571,
+    "posix:small_files": 0.00805
   },
-  "claim_gate": "CITEABLE=yes_iouring_small_win"
+  "claim_gate": "CITEABLE=yes_iouring_win"
 }
