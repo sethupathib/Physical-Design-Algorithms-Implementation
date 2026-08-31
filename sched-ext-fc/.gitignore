@@ -1,0 +1,5 @@
+results/*.txt
+results/*.json
+!results/SUMMARY.txt
+!results/CLAIM_GATE.txt
+build/

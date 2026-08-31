@@ -1,0 +1,18 @@
+CLAIM_GATE
+ix_role=burn
+baseline flat: ix_cpu_eq=0.500 batch_iters_per_s=750.20
+rule: postable iff ix_cpu_eq >= 1.40 * flat_ix_cpu_eq AND batch_rate >= 0.55 * flat_batch
+meaning: layer weights must give the interactive-class burn a clearly larger CPU share without collapsing batch below 55% of flat
+
+nice: ix_cpu_eq=0.999 (ok) batch=501.22 (ok) => PASS
+sched_batch: ix_cpu_eq=0.500 (no) batch=750.17 (ok) => FAIL
+layers: ix_cpu_eq=1.000 (ok) batch=500.69 (ok) => PASS
+protect: ix_cpu_eq=1.000 (ok) batch=500.60 (ok) => PASS
+
+POSTABLE_POLICIES=nice,layers,protect
+LINKEDIN: cite only POSTABLE_POLICIES. Claim = CPU-share control for interactive-class work under FC-batch oversubscription via layer weights. Do NOT claim a BPF sched_ext scheduler was loaded on this host.
+
+KERNEL_FACTS:
+  /sys/kernel/sched_ext absent => CONFIG_SCHED_EXT not enabled here
+  control plane measured: cgroup v2 cpu.weight / nice / SCHED_BATCH
+  configs/scx_layered_*.json = same policy shape for when SCX is available
