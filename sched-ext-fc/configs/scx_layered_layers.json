@@ -1,0 +1,25 @@
+{
+  "_comment": "scx_layered-shaped config mirroring cgroup policy 'layers' (interactive:batch = 5:1). NOT loaded on this host — CONFIG_SCHED_EXT unavailable. Match rules assume farm wrappers put FC batch under cgroup .../batch and Vortex/debug under .../interactive.",
+  "layers": [
+    {
+      "name": "interactive",
+      "comment": "Engineer debug shells, Vortex log queries, short fc_shell interactive sessions",
+      "matches": [
+        { "cgroup_prefix": "/sched_ext_fc/interactive" }
+      ],
+      "kind": "Confined",
+      "weight": 500,
+      "preempt": true
+    },
+    {
+      "name": "batch_fc",
+      "comment": "Overnight place/CTS/route / long fc_shell -f scripts",
+      "matches": [
+        { "cgroup_prefix": "/sched_ext_fc/batch" }
+      ],
+      "kind": "Confined",
+      "weight": 100,
+      "preempt": false
+    }
+  ]
+}

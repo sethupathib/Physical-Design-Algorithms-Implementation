@@ -1,0 +1,6 @@
+policy	ix_cpu_eq	ix_iters_per_s	batch_iters_per_s	ix_vs_flat	batch_vs_flat
+flat	0.500	250.17	750.20	1.000x	1.000x
+nice	0.999	499.73	501.22	1.998x	0.668x
+sched_batch	0.500	250.22	750.17	1.000x	1.000x
+layers	1.000	499.83	500.69	1.998x	0.667x
+protect	1.000	499.92	500.60	1.998x	0.667x

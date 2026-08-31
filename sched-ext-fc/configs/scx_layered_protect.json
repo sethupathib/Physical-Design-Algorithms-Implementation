@@ -1,0 +1,24 @@
+{
+  "_comment": "Stronger interactive protection: high weight + batch CPU ceiling. Mirrors cgroup policy 'protect' (weight 1000:50 + cpu.max on batch).",
+  "layers": [
+    {
+      "name": "interactive",
+      "matches": [
+        { "cgroup_prefix": "/sched_ext_fc/interactive" }
+      ],
+      "kind": "Confined",
+      "weight": 1000,
+      "preempt": true
+    },
+    {
+      "name": "batch_fc",
+      "matches": [
+        { "cgroup_prefix": "/sched_ext_fc/batch" }
+      ],
+      "kind": "Confined",
+      "weight": 50,
+      "preempt": false,
+      "util_range": [0.0, 0.5]
+    }
+  ]
+}
