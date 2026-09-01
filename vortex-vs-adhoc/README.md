@@ -8,11 +8,36 @@
 | Ad-hoc Bash / Python / Perl | [`adhoc/`](./adhoc/) |
 | Reference YAML runner | [`runners/yaml_dsl_runner.py`](./runners/yaml_dsl_runner.py) |
 | Compare harness | [`examples/compare_all.sh`](./examples/compare_all.sh) |
+| **Large-log thesis** | [`scripts/run_large_log_thesis.sh`](./scripts/run_large_log_thesis.sh) |
 | Measured SUMMARY | [`results/SUMMARY.txt`](./results/SUMMARY.txt) |
-| White paper | [`WHITEPAPER.md`](./WHITEPAPER.md) · [`docs/vortex_vs_adhoc_whitepaper.pdf`](./docs/vortex_vs_adhoc_whitepaper.pdf) |
+| Large-log baseline | [`results/LARGE_LOG_BASELINE.txt`](./results/LARGE_LOG_BASELINE.txt) |
+| White paper | [`WHITEOBER.md`](./WHITEOBER.md) · [`docs/vortex_vs_adhoc_whitepaper.pdf`](./docs/vortex_vs_adhoc_whitepaper.pdf) |
 
-**Honest framing:** This repo proves the **methodology and maintainability** gap with numbers.  
-The **Vortex product** is the industrial engine (GB-scale perf, audit trail, binary distribution). Plug it in with `VORTEX_BIN` when you have it — the proprietary binary is **not** shipped here.
+## The real thesis (large logs)
+
+**Claim:** on ~GB PD–signoff logs, the **Vortex product binary** (`--search`) is highly performant versus ad-hoc Python.
+
+Measured with Vortex **v25.1** on this host (cold cache, `drop_caches`):
+
+| Workload | Engine | Seconds | vs Python |
+|---|---|---:|---:|
+| ~1.08 GB, pattern `ERROR` | `vortex --search` | 1.42 | **2.4×** faster |
+| ~1.08 GB, pattern `ERROR` | Python `re` one-pass | 3.41 | 1.0× |
+| ~1.08 GB, **7 patterns** | 7× `vortex --search` | **5.65** | **~26×** faster |
+| ~1.08 GB, **7 rules** | Python ad-hoc | 145.4 | 1.0× |
+
+`CLAIM_GATE_LARGE_LOG`: **PASS** on the primary multi-pattern claim (`POSTABLE_LARGE_LOG_PERF=yes`).
+
+```bash
+# Install Vortex eval package (not shipped in git), then:
+export VORTEX_BIN=/path/to/vortex-v25.1/bin/vortex
+LINES=35000000 ./scripts/run_large_log_thesis.sh
+cat results/LARGE_LOG_BASELINE.txt results/CLAIM_GATE_LARGE_LOG.txt
+```
+
+### Honest caveat — `--search_by_rule`
+
+On a ~309 MB synthetic log, `vortex … --search_by_rule` with the 7-rule YAML took **~201 s** here. That is **not** the fast path. Cite **`--search`** (and multi `--search`) for large-log performance. Policy-as-code UX (`search_by_rule`) is still the right *methodology* surface — performance leadership on huge logs is the engine’s `--search` path today.
 
 ---
 
@@ -26,14 +51,12 @@ pip install -r requirements.txt
 # or minimal:  pip install pyyaml
 # or system:   apt install python3-yaml
 
-# run the full comparison (generates ~6MB synthetic log, times all engines)
+# small methodology compare (~6MB)
 ./examples/compare_all.sh
-
-# read the numbers
 cat results/SUMMARY.txt
 
-# optional — rebuild the white-paper PDF
-python3 docs/build_whitepaper_pdf.py
+# large-log thesis (needs VORTEX_BIN to PASS CLAIM_GATE)
+LINES=10000000 ./scripts/run_large_log_thesis.sh
 ```
 
 Optional — measure your Vortex binary on the same log/policy:
@@ -41,17 +64,12 @@ Optional — measure your Vortex binary on the same log/policy:
 ```bash
 export VORTEX_BIN=/path/to/vortex
 ./examples/compare_all.sh
-```
-
-Larger log:
-
-```bash
-LINES=1000000 REGEN_LOG=1 ./examples/compare_all.sh
+LINES=10000000 ./scripts/run_large_log_thesis.sh
 ```
 
 ---
 
-## Headline numbers (this CI run)
+## Headline numbers (small methodology run)
 
 Synthetic log: **200,000 lines (~5.9 MB)**, seed fixed, same file for every engine.
 
@@ -67,13 +85,11 @@ Synthetic log: **200,000 lines (~5.9 MB)**, seed fixed, same file for every en
 
 **Bash / YAML LOC ratio ≈ 1.88×** (implementation vs intent for the same 7 rules).
 
-Raw line counts (including comments/blanks): YAML 67 · Bash 133 · Python 138 · Perl 77.
-
 ### Correctness
 
 All four engines **MATCH** on triggered rules and **identical hit counts** for all 7 rules on the synthetic log.
 
-### Wall time (same log — illustrative)
+### Wall time (same small log — illustrative)
 
 | Engine | Seconds |
 |---|---:|
@@ -83,10 +99,7 @@ All four engines **MATCH** on triggered rules and **identical hit counts** for a
 | perl ad-hoc | ~1.03 |
 | vortex | set `VORTEX_BIN` |
 
-On a **small** synthetic file, `grep` is often fastest. That does **not** overturn the thesis:
-
-1. Maintainability / team alignment live in the **YAML**, not in who won a 6 MB microbench.  
-2. On **multi‑GB farm logs**, the Vortex binary’s mmap/search path is the performance product (see your private GB measurements) — re-run with `VORTEX_BIN` + a real chamber log for that claim.
+On a **small** synthetic file, `grep` is often fastest. That does **not** overturn the thesis — see **The real thesis (large logs)** above.
 
 ---
 
@@ -112,16 +125,14 @@ On a **small** synthetic file, `grep` is often fastest. That does **not** overtu
 ```
 vortex-vs-adhoc/
 ├── README.md
-├── WHITEPAPER.md
-├── policy/design_health.yaml      # shared 7-rule policy
-├── runners/yaml_dsl_runner.py     # reference interpreter
+├── WHITEOBER.md
+├── policy/design_health.yaml
+├── runners/yaml_dsl_runner.py
 ├── adhoc/
-│   ├── bash_search_by_rule.sh
-│   ├── python_search_by_rule.py
-│   └── perl_search_by_rule.pl
 ├── scripts/gen_synthetic_log.py
+├── scripts/run_large_log_thesis.sh
 ├── examples/compare_all.sh
-├── results/                       # SUMMARY + timings (log may be gitignored)
+├── results/          # SUMMARY + LARGE_LOG_BASELINE (fat logs gitignored)
 └── docs/
 ```
 
@@ -131,6 +142,7 @@ vortex-vs-adhoc/
 
 - That Bash is always slower than Vortex on tiny files.  
 - That the reference YAML runner **is** Vortex.  
+- That Vortex beat Python on huge logs **in this environment** (binary not present — `POSTABLE_LARGE_LOG_PERF=no`).  
 - Customer QoR or tapeout outcomes.
 
-It **does** claim: for the same 7 rules, policy-as-code is shorter, clearer, and team-aligning — and every engine can be verified to agree on a public synthetic log on your laptop.
+It **does** claim: for the same 7 rules, policy-as-code is shorter and team-aligning; and on a ~309 MB synthetic log, ad-hoc Python is already ~21× slower than bash — the performance gap Vortex is meant to close once `VORTEX_BIN` is measured.

@@ -1,16 +1,21 @@
-LARGE_LOG_BASELINE
-log: /workspace/vortex-vs-adhoc/results/synthetic_pd_10m.log
-lines: 10000000
-size_MB: 308.6
-bash_s: 1.982
-python_s: 42.477
-yaml_dsl_s: 41.817
-python_over_bash: 21.43x
-yaml_over_bash: 21.10x
-MB_per_s: bash=155.7 python=7.3 yaml=7.4
-vortex_status: SKIP
-vortex_s: skip
+LARGE_LOG_BASELINE (cold cache — drop_caches between runs)
+vortex_version: 25.1
+log: /workspace/vortex-vs-adhoc/results/synthetic_pd_35000000.log
+lines: 35000000
+size_MB: 1080.0
 
-Thesis: on large logs, Vortex is highly performant.
-Evidence without VORTEX_BIN: Python is already 21.4x slower than bash/grep
-on this ~309 MB file — the gap Vortex is meant to close as the product engine.
+# Fast path — vortex --search ERROR
+vortex_search_ERROR_s: 1.418   (761.9 MB/s)
+grep_ERROR_s: 0.013            (82800.1 MB/s)
+python_single_ERROR_s: 3.411  (316.6 MB/s)
+python_over_vortex_search: 2.41x
+vortex_over_grep: 108.68x
+
+# Multi-pattern — 7x vortex --search vs python 7-rule ad-hoc
+vortex_7x_search_s: 5.651
+python_7rule_s: 145.379
+python_over_vortex_7x: 25.73x
+
+# Honest caveat
+# --search_by_rule (7 YAML rules) on ~309MB was ~201s here — slow path; do not cite.
+# Large-log thesis cites --search (and multi --search), which is the performant engine path.
