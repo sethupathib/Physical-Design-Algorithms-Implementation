@@ -1,0 +1,10 @@
+CLAIM_GATE_LARGE_LOG
+lines=10000000
+size_MB=308.6
+bash_s=1.982
+python_s=42.477
+yaml_dsl_s=41.817
+vortex_status=SKIP
+rule: cannot pass without a successful VORTEX_BIN run
+POSTABLE_LARGE_LOG_PERF=no
+THESIS_STATUS: large-log Vortex performance NOT PROVEN on this host

@@ -7,3 +7,5 @@
 !bash_report.json
 !python_report.json
 !perl_report.json
+!LARGE_LOG_BASELINE.txt
+!CLAIM_GATE_LARGE_LOG.txt

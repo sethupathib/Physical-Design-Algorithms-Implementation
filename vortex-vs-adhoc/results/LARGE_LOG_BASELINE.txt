@@ -1,0 +1,16 @@
+LARGE_LOG_BASELINE
+log: /workspace/vortex-vs-adhoc/results/synthetic_pd_10m.log
+lines: 10000000
+size_MB: 308.6
+bash_s: 1.982
+python_s: 42.477
+yaml_dsl_s: 41.817
+python_over_bash: 21.43x
+yaml_over_bash: 21.10x
+MB_per_s: bash=155.7 python=7.3 yaml=7.4
+vortex_status: SKIP
+vortex_s: skip
+
+Thesis: on large logs, Vortex is highly performant.
+Evidence without VORTEX_BIN: Python is already 21.4x slower than bash/grep
+on this ~309 MB file — the gap Vortex is meant to close as the product engine.
