@@ -1,0 +1,14 @@
+CLAIM_GATE_LARGE_LOG
+cache=cold
+size_MB=1080.0
+vortex_search_ERROR_s=1.418
+python_single_ERROR_s=3.411
+grep_ERROR_s=0.013
+vortex_7x_search_s=5.651
+python_7rule_s=145.379
+rule_fast: vortex --search <= python/4 => FAIL (2.41x)
+rule_multi: vortex 7x --search <= python_7rule/5 => PASS (25.73x)
+rule_vs_grep: vortex --search <= grep*10 (cold) => FAIL (108.68x)
+POSTABLE_LARGE_LOG_PERF=no
+POSTABLE_CLAIM: On ~1GB synthetic PD log (cold cache), Vortex --search is 2.4x faster than Python; 7x --search is 25.7x faster than Python 7-rule ad-hoc.
+DO_NOT_CITE: --search_by_rule wall time on this host

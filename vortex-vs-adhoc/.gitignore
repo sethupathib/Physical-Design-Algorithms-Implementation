@@ -1,0 +1,6 @@
+results/synthetic_pd.log
+results/*.stdout
+results/*.stderr
+__pycache__/
+*.pyc
+.DS_Store

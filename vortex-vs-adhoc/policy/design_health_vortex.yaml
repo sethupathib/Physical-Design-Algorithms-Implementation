@@ -1,0 +1,51 @@
+# Same 7 design-health rules as vortex-vs-adhoc/policy/design_health.yaml,
+# keyed for Vortex v25.1 --search_by_rule (uses `message` not `note`).
+rules:
+  - name: setup_violation
+    severity: error
+    pattern: 'VIOLATED.*\bsetup\b|Setup\s+slack\s+-\d'
+    count_threshold: 0
+    context_lines: 2
+    message: Timing setup fails (any count is actionable).
+
+  - name: hold_violation
+    severity: error
+    pattern: 'VIOLATED.*\bhold\b|Hold\s+slack\s+-\d'
+    count_threshold: 0
+    context_lines: 2
+    message: Timing hold fails.
+
+  - name: max_transition
+    severity: warning
+    pattern: 'max_transition|MaxTran|MAXTRAN'
+    count_threshold: 10
+    context_lines: 1
+    message: Flag only if more than 10 MaxTran hits (noise floor).
+
+  - name: drc_error
+    severity: error
+    pattern: '\bDRC\b.*(error|violation|fail)|ERROR:\s*DRC'
+    count_threshold: 0
+    context_lines: 2
+    message: Hard DRC errors.
+
+  - name: antenna
+    severity: warning
+    pattern: '\bANTENNA\b|antenna\s+violation'
+    count_threshold: 5
+    context_lines: 1
+    message: Antenna noise below 5 is ignored.
+
+  - name: congestion_hotspot
+    severity: warning
+    pattern: 'Congestion\s*>\s*0\.(8|9)|Overflow\s*>\s*[5-9]\d'
+    count_threshold: 0
+    context_lines: 1
+    message: Routing congestion / overflow hotspots.
+
+  - name: fatal_or_abort
+    severity: fatal
+    pattern: '\bFATAL\b|\bABORT\b|stack\s+trace|INTERNAL\s+ERROR'
+    count_threshold: 0
+    context_lines: 3
+    message: Tool death / internal errors — stop and escalate.

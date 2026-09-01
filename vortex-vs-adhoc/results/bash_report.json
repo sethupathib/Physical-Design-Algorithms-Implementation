@@ -1,0 +1,56 @@
+{
+  "engine": "bash_grep_procedural",
+  "log": "/workspace/vortex-vs-adhoc/results/synthetic_pd.log",
+  "timestamp": "2026-08-27T01:56:49+00:00",
+  "results": [
+    {
+      "name": "setup_violation",
+      "severity": "error",
+      "count": 52,
+      "threshold": 0,
+      "triggered": true
+    },
+    {
+      "name": "hold_violation",
+      "severity": "error",
+      "count": 66,
+      "threshold": 0,
+      "triggered": true
+    },
+    {
+      "name": "max_transition",
+      "severity": "warning",
+      "count": 57,
+      "threshold": 10,
+      "triggered": true
+    },
+    {
+      "name": "drc_error",
+      "severity": "error",
+      "count": 67,
+      "threshold": 0,
+      "triggered": true
+    },
+    {
+      "name": "antenna",
+      "severity": "warning",
+      "count": 57,
+      "threshold": 5,
+      "triggered": true
+    },
+    {
+      "name": "congestion_hotspot",
+      "severity": "warning",
+      "count": 43,
+      "threshold": 0,
+      "triggered": true
+    },
+    {
+      "name": "fatal_or_abort",
+      "severity": "fatal",
+      "count": 57,
+      "threshold": 0,
+      "triggered": true
+    }
+  ]
+}

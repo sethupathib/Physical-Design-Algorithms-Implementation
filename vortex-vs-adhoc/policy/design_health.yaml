@@ -1,0 +1,67 @@
+# Design-health policy for PD / signoff logs (Vortex-style YAML DSL)
+#
+# Intent: WHAT to find — not HOW to implement the scanner.
+# Edit a threshold or pattern here; do not touch procedural glue.
+#
+# Compatible surface: Vortex `search_by_rule` when VORTEX_BIN is set.
+# This repo also ships a reference YAML runner for machines without the binary.
+
+version: 1
+policy_name: design_health_v1
+description: >
+  Seven named rules for chamber / signoff log forensics.
+  Shared language for FE, BE, CAD, and methodology.
+
+defaults:
+  context_lines: 1
+  case_sensitive: false
+
+rules:
+  - name: setup_violation
+    severity: error
+    pattern: 'VIOLATED.*\bsetup\b|Setup\s+slack\s+-\d'
+    count_threshold: 0
+    context_lines: 2
+    note: Timing setup fails (any count is actionable).
+
+  - name: hold_violation
+    severity: error
+    pattern: 'VIOLATED.*\bhold\b|Hold\s+slack\s+-\d'
+    count_threshold: 0
+    context_lines: 2
+    note: Timing hold fails.
+
+  - name: max_transition
+    severity: warning
+    pattern: 'max_transition|MaxTran|MAXTRAN'
+    count_threshold: 10
+    context_lines: 1
+    note: Flag only if more than 10 MaxTran hits (noise floor).
+
+  - name: drc_error
+    severity: error
+    pattern: '\bDRC\b.*(error|violation|fail)|ERROR:\s*DRC'
+    count_threshold: 0
+    context_lines: 2
+    note: Hard DRC errors.
+
+  - name: antenna
+    severity: warning
+    pattern: '\bANTENNA\b|antenna\s+violation'
+    count_threshold: 5
+    context_lines: 1
+    note: Antenna noise below 5 is ignored.
+
+  - name: congestion_hotspot
+    severity: warning
+    pattern: 'Congestion\s*>\s*0\.(8|9)|Overflow\s*>\s*[5-9]\d'
+    count_threshold: 0
+    context_lines: 1
+    note: Routing congestion / overflow hotspots.
+
+  - name: fatal_or_abort
+    severity: fatal
+    pattern: '\bFATAL\b|\bABORT\b|stack\s+trace|INTERNAL\s+ERROR'
+    count_threshold: 0
+    context_lines: 3
+    note: Tool death / internal errors — stop and escalate.
