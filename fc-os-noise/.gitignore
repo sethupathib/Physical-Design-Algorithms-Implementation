@@ -1,0 +1,6 @@
+results/*.json
+results/*.txt
+!results/SUMMARY.txt
+!results/CLAIM_GATE.txt
+!results/PROBE.txt
+build/
