@@ -1,0 +1,13 @@
+CLAIM_GATE
+soft-isolation (taskset) under synthetic OS noise
+flat_contend: wall=1.603s p99=4481.7us
+pin_split:    wall=0.807s p99=2069.6us
+p99_ratio pin/flat=0.462 (ok)
+wall_ratio pin/flat=0.503 (ok)
+rule: p99<=0.85x OR wall<=0.90x => PASS
+POSTABLE_SOFT_ISOLATION=yes
+
+BOOT_PARAMS (farm node — requires reboot; not applied on this demo host):
+  isolcpus=<job_cpus> nohz_full=<job_cpus> rcu_nocbs=<job_cpus>
+  then: taskset -c <job_cpus> fc_shell -f run.tcl
+This demo proves the pinning half without reboot; full nohz/rcu needs cmdline.

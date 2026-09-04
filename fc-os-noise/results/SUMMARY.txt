@@ -1,0 +1,5 @@
+policy	wall_s	p50_us	p99_us	max_us
+flat_quiet	0.803	1999.5	2058.7	2079.1
+pin_only	0.792	1966.7	1977.3	2207.2
+flat_contend	1.603	1988.1	4481.7	5988.8
+pin_split	0.807	1996.8	2069.6	2087.3

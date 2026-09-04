@@ -1,0 +1,17 @@
+# Example: steer IRQs toward housekeeping CPUs (0-7), away from job CPUs (8-15).
+# Run as root on the farm node AFTER isolcpus boot. Adjust lists to your topology.
+#
+# List IRQs:
+#   grep -R . /proc/irq/*/smp_affinity_list 2>/dev/null | head
+#
+# Set default affinity for new IRQs (hex mask for CPUs 0-7 = 0xff on first 8):
+#   echo 0-7 > /proc/irq/default_smp_affinity   # if present
+#
+# Per-IRQ (example):
+#   for irq in /proc/irq/*/smp_affinity_list; do
+#     echo 0-7 > "$irq" 2>/dev/null || true
+#   done
+#
+# Prefer vendor tools when available (irqbalance stop + manual affinity).
+HOUSEKEEPING_CPUS=0-7
+JOB_CPUS=8-15

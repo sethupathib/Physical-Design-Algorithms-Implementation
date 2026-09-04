@@ -1,0 +1,11 @@
+kernel: 6.12.94+
+cmdline: console=ttyS0 root=/dev/vda random.trust_cpu=on ip=172.30.0.2::172.30.0.1:255.255.255.0::eth0:off rw loglevel=7 earlyprintk=ttyS0 print-fatal-signals=1 systemd.unified_cgroup_hierarchy=1 systemd.setenv=SWAP_SIZE_MB=0 reboot=k panic=1 nomodule pci=off 8250.nr_uarts=0 i8042.noaux=1 i8042.nomux=1 i8042.dumbkbd=1 clocksource=kvm-clock tsc=unstable nosoftlockup pci=off root=/dev/vda rw virtio_mmio.device=4K@0xc0001000:5 virtio_mmio.device=4K@0xc0002000:6 virtio_mmio.device=4K@0xc0003000:7 virtio_mmio.device=4K@0xc0004000:8 virtio_mmio.device=4K@0xc0005000:9
+nproc: 4
+online: 0-3
+isolated(sysfs): 
+nohz_full(sysfs): (empty/absent)
+boot_isolcpus: ABSENT  (demo uses taskset/cpuset soft-isolation without reboot)
+boot_nohz_full: ABSENT
+boot_rcu_nocbs: ABSENT
+taskset: /usr/bin/taskset
+cpuset_controller: cpuset cpu io memory hugetlb pids
