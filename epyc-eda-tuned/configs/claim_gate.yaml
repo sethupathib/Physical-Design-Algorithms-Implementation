@@ -1,0 +1,14 @@
+# CLAIM_GATE thresholds for epyc-eda-tuned
+# All performance public claims must pass scripts/claim_gate.sh
+
+claim_id: epyc_eda_lower_migration_cost_reduces_spread_makespan
+bench: fanout_bench
+mode: spread
+high_migration_cost_ns: 5000000
+low_migration_cost_ns: 10000
+outer_iters: 7
+pass_ratio_low_over_high_max: 0.97   # >=3% faster at low cost
+inconclusive_ratio_max: 1.02
+require_writable_migration_cost: true
+require_amd: false   # mechanism is general; AMD is the shipped profile context
+publish_without_pass: false

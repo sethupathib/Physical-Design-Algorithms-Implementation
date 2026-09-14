@@ -7,6 +7,10 @@ Steps--
 1. Implement Kruskal's MST using DSU.
 2. Implement Steiner Tree using MST (A lot more complex than this).
 
+## [**epyc-eda-tuned**](./epyc-eda-tuned)
+
+Rigorous lab for AMD’s TuneD profile `epyc-eda` (`sched_migration_cost_ns` 5 ms → 10 µs): mirrored AlmaLinux configs, BIOS checklist, command runbook, CLAIM_GATE microbench. Designed to extract as its own GitHub repo (`STANDALONE_REPO.md`).
+
 ## Case Study
 
 1. [**Register Clustering for Optimal PPA**](https://dl.acm.org/doi/10.1145/3299902.3309753) and [**ISPD Slides.**](http://ispd.cc/slides/2019/2_placement_GracefulReg.pdf)

@@ -1,0 +1,14 @@
+wrote=/workspace/epyc-eda-tuned/results/claim_gate_20260914T010555Z/host_inventory.txt
+# CLAIM_GATE
+stamp=20260914T010555Z
+claim=epyc_eda_lower_migration_cost_reduces_spread_makespan
+method=fanout_bench_spread_mode_A_B_5ms_vs_10us
+is_amd=0
+has_tuned=0
+can_set_migration_cost=0
+claim_gate_eligible=no
+gate_result=SKIP
+gate_reason=host_cannot_write_sched_migration_cost_ns
+publishable_claim=NO
+allowed_public_statement=Host inventory only; no performance claim.
+outdir=/workspace/epyc-eda-tuned/results/claim_gate_20260914T010555Z
