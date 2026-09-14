@@ -1,0 +1,24 @@
+wrote=/workspace/epyc-eda-tuned/results/compare_20260914T010554Z/host_inventory.txt
+wrote=/workspace/epyc-eda-tuned/results/compare_20260914T010554Z/knobs_before.txt
+# compare_profiles
+stamp=20260914T010554Z
+dry_run=1
+high_ns=5000000
+low_ns=10000
+mig_path=none
+NOTE: dry-run — running bench once at current knobs only
+bench=fanout
+mode=spread
+nproc=4
+threads=4
+pin_cpus=1
+work_units=2500
+jobs=256
+burn_iters=10000
+outer=7
+makespan_median_s=0.082996
+makespan_min_s=0.075170
+makespan_max_s=0.087142
+unit=seconds
+result=DRY_RUN
+outdir=/workspace/epyc-eda-tuned/results/compare_20260914T010554Z

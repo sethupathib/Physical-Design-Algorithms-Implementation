@@ -1,0 +1,11 @@
+/src/fanout_bench
+/results/compare_*/
+/results/claim_gate_*/
+/results/host_inventory.txt
+/results/sched_knobs*.txt
+/results/migration_cost_before.txt
+/results/verify_profile.txt
+/results/bios_signoff_*.md
+*.o
+*.out
+.DS_Store
