@@ -1,0 +1,32 @@
+# designs — inventory of EDA flows to materialize as Airflow DAGs
+# Each row is rendered through templates/eda_flow.yml.j2
+
+defaults:
+  owner: cad_infra
+  queue: eda_default
+  retries: 1
+  # Placeholders only — swap for real binaries/paths on your farm
+  vortex_bin: vortex
+  rules_yaml: configs/rules/dummy_flag.yaml
+
+designs:
+  - design: demo_chip_a
+    stage: place
+    tool_cmd: "echo '[PLACEHOLDER] run place for demo_chip_a' && sleep 1"
+    log_src: "/tmp/eda_logs/demo_chip_a/place/"
+    log_dst: "/tmp/vortex_ingest/demo_chip_a/place/"
+    enable_vortex: true
+
+  - design: demo_chip_a
+    stage: route
+    tool_cmd: "echo '[PLACEHOLDER] run route for demo_chip_a' && sleep 1"
+    log_src: "/tmp/eda_logs/demo_chip_a/route/"
+    log_dst: "/tmp/vortex_ingest/demo_chip_a/route/"
+    enable_vortex: true
+
+  - design: demo_chip_b
+    stage: sta
+    tool_cmd: "echo '[PLACEHOLDER] run STA for demo_chip_b' && sleep 1"
+    log_src: "/tmp/eda_logs/demo_chip_b/sta/"
+    log_dst: "/tmp/vortex_ingest/demo_chip_b/sta/"
+    enable_vortex: false

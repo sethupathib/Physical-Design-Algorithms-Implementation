@@ -1,0 +1,48 @@
+{#
+  EDA flow skeleton — one DAG per (design, stage).
+  Placeholders are filled by scripts/render_dags.py from configs/designs.yaml.
+#}
+{{ dag_id }}:
+  default_args:
+    owner: "{{ owner }}"
+    retries: {{ retries }}
+  description: "EDA {{ stage }} for {{ design }} (templated YAML → dag-factory)"
+  schedule: null
+  catchup: false
+  tags:
+    - eda
+    - templated
+    - "{{ stage }}"
+    - "{{ design }}"
+  tasks:
+    - task_id: prepare_dirs
+      operator: airflow.providers.standard.operators.bash.BashOperator
+      bash_command: >
+        mkdir -p "{{ log_src }}" "{{ log_dst }}" &&
+        echo "prepared {{ design }}/{{ stage }}"
+
+    - task_id: run_engine
+      operator: airflow.providers.standard.operators.bash.BashOperator
+      bash_command: "{{ tool_cmd }}"
+      dependencies: [prepare_dirs]
+
+    - task_id: collect_logs
+      operator: airflow.providers.standard.operators.bash.BashOperator
+      bash_command: >
+        mkdir -p "{{ log_dst }}" &&
+        if [ -d "{{ log_src }}" ]; then
+          cp -a "{{ log_src }}." "{{ log_dst }}/" 2>/dev/null || true;
+        fi &&
+        echo "collected logs {{ log_src }} -> {{ log_dst }}"
+      dependencies: [run_engine]
+{% if enable_vortex %}
+
+    - task_id: vortex_slice
+      operator: airflow.providers.standard.operators.bash.BashOperator
+      # Placeholder: real farms call vortex binary; here we only echo the contract.
+      bash_command: >
+        echo "[PLACEHOLDER] {{ vortex_bin }} {{ log_dst }} certify_high_quality 1
+        --search_by_rule {{ rules_yaml }}" &&
+        echo "vortex_slice ok for {{ design }}/{{ stage }}"
+      dependencies: [collect_logs]
+{% endif %}
