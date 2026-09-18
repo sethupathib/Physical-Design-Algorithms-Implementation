@@ -7,6 +7,10 @@ Steps--
 1. Implement Kruskal's MST using DSU.
 2. Implement Steiner Tree using MST (A lot more complex than this).
 
+## [**airflow-yaml-dags**](./airflow-yaml-dags)
+
+Templatized Airflow DAGs from YAML (Jinja inventory × dag-factory) for EDA-shaped `design × stage` farms. Extractable as its own repo.
+
 ## Case Study
 
 1. [**Register Clustering for Optimal PPA**](https://dl.acm.org/doi/10.1145/3299902.3309753) and [**ISPD Slides.**](http://ispd.cc/slides/2019/2_placement_GracefulReg.pdf)

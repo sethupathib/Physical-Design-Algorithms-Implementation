@@ -1,0 +1,5 @@
+jinja2>=3.1
+PyYAML>=6.0
+dag-factory>=1.0
+# Airflow 2.9+ or 3.x both work with dag-factory 1.x; pin what your farm runs.
+apache-airflow>=2.9.0

@@ -1,0 +1,12 @@
+# airflow-yaml-dags
+.airflow_home/
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+generated/eda__*.yml
+generated/MANIFEST.txt
+dags/eda__*.yml
+results/*.log
+.DS_Store

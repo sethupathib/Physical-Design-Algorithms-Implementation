@@ -1,0 +1,33 @@
+eda__demo_chip_b__sta:
+  default_args:
+    owner: "cad_infra"
+    retries: 1
+  description: "EDA sta for demo_chip_b (templated YAML → dag-factory)"
+  schedule: null
+  catchup: false
+  tags:
+    - eda
+    - templated
+    - "sta"
+    - "demo_chip_b"
+  tasks:
+    - task_id: prepare_dirs
+      operator: airflow.providers.standard.operators.bash.BashOperator
+      bash_command: >
+        mkdir -p "/tmp/eda_logs/demo_chip_b/sta/" "/tmp/vortex_ingest/demo_chip_b/sta/" &&
+        echo "prepared demo_chip_b/sta"
+
+    - task_id: run_engine
+      operator: airflow.providers.standard.operators.bash.BashOperator
+      bash_command: "echo '[PLACEHOLDER] run STA for demo_chip_b' && sleep 1"
+      dependencies: [prepare_dirs]
+
+    - task_id: collect_logs
+      operator: airflow.providers.standard.operators.bash.BashOperator
+      bash_command: >
+        mkdir -p "/tmp/vortex_ingest/demo_chip_b/sta/" &&
+        if [ -d "/tmp/eda_logs/demo_chip_b/sta/" ]; then
+          cp -a "/tmp/eda_logs/demo_chip_b/sta/." "/tmp/vortex_ingest/demo_chip_b/sta//" 2>/dev/null || true;
+        fi &&
+        echo "collected logs /tmp/eda_logs/demo_chip_b/sta/ -> /tmp/vortex_ingest/demo_chip_b/sta/"
+      dependencies: [run_engine]

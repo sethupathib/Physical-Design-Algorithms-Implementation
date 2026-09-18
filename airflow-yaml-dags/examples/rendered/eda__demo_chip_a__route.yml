@@ -1,0 +1,42 @@
+eda__demo_chip_a__route:
+  default_args:
+    owner: "cad_infra"
+    retries: 1
+  description: "EDA route for demo_chip_a (templated YAML → dag-factory)"
+  schedule: null
+  catchup: false
+  tags:
+    - eda
+    - templated
+    - "route"
+    - "demo_chip_a"
+  tasks:
+    - task_id: prepare_dirs
+      operator: airflow.providers.standard.operators.bash.BashOperator
+      bash_command: >
+        mkdir -p "/tmp/eda_logs/demo_chip_a/route/" "/tmp/vortex_ingest/demo_chip_a/route/" &&
+        echo "prepared demo_chip_a/route"
+
+    - task_id: run_engine
+      operator: airflow.providers.standard.operators.bash.BashOperator
+      bash_command: "echo '[PLACEHOLDER] run route for demo_chip_a' && sleep 1"
+      dependencies: [prepare_dirs]
+
+    - task_id: collect_logs
+      operator: airflow.providers.standard.operators.bash.BashOperator
+      bash_command: >
+        mkdir -p "/tmp/vortex_ingest/demo_chip_a/route/" &&
+        if [ -d "/tmp/eda_logs/demo_chip_a/route/" ]; then
+          cp -a "/tmp/eda_logs/demo_chip_a/route/." "/tmp/vortex_ingest/demo_chip_a/route//" 2>/dev/null || true;
+        fi &&
+        echo "collected logs /tmp/eda_logs/demo_chip_a/route/ -> /tmp/vortex_ingest/demo_chip_a/route/"
+      dependencies: [run_engine]
+
+    - task_id: vortex_slice
+      operator: airflow.providers.standard.operators.bash.BashOperator
+      # Placeholder: real farms call vortex binary; here we only echo the contract.
+      bash_command: >
+        echo "[PLACEHOLDER] vortex /tmp/vortex_ingest/demo_chip_a/route/ certify_high_quality 1
+        --search_by_rule configs/rules/dummy_flag.yaml" &&
+        echo "vortex_slice ok for demo_chip_a/route"
+      dependencies: [collect_logs]
