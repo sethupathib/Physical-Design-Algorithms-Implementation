@@ -1,0 +1,13 @@
+# Example hierarchical DRC job (Calibre -drc -hier -turbo).
+job:
+  name: riscv_top_drc
+  flow: drc
+  design: riscv_top
+  ruledeck: /path/to/drc.rule
+  layout: /path/to/design.gds
+  want_remote_slaves: 3
+  want_turbo: 4
+  mem_gb_per_slave: 64
+  queue: bat.l
+  enable_hyperflex: false
+  notes: "TSRI guide example shape: 3 hosts × 4 turbo = 12 cores."

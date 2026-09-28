@@ -1,0 +1,12 @@
+# Intentionally over-asks relative to default farm.yaml licenses/slots.
+job:
+  name: perc_overask
+  flow: perc
+  design: huge_soc
+  ruledeck: /path/to/perc.rule
+  layout: /path/to/huge.gds
+  want_remote_slaves: 16
+  want_turbo: 8
+  mem_gb_per_slave: 128
+  queue: bat.l
+  enable_hyperflex: true
