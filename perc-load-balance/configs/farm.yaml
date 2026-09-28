@@ -1,0 +1,65 @@
+# Farm profile — defaults inspired by TSRI EDA Cloud 2.0 User Guide r1.3
+# (IBM Spectrum LSF). Tune to match `busers` / `lmstat` on your site.
+
+farm:
+  name: tsri_eda_cloud_like
+  scheduler: lsf
+  # Guide: one job slot == one CPU core; Max slot per user currently 128
+  max_slots_per_user: 128
+  queues:
+    int:
+      weight: 70
+      max_slots_per_user: 128
+      max_dram_gb_per_job: 128
+      auto_kill: "2 days"
+      mode: interactive
+    bat.m:
+      weight: 50
+      max_slots_per_user: 128
+      max_dram_gb_per_job: 250
+      auto_kill: "1 day"
+      mode: batch
+    bat.l:
+      weight: 40
+      max_slots_per_user: 128
+      max_dram_gb_per_job: 250
+      auto_kill: "14 days"
+      mode: batch
+  # Guide note: -R "select[mem>N]" finds hosts; memory is NOT reserved.
+  mem_select_reserves: false
+  notes:
+    - "Prefer bat.l for large multi-host Calibre / PERC."
+    - "Hosts × cpu_per_host must not exceed max_slots_per_user or LSF never dispatches."
+    - "Disable -hyper / hyperflex on large designs if LSF kills for memory overuse."
+
+# License model is SITE-SPECIFIC. These are planning knobs — replace with
+# lmstat-derived numbers. Silent killer #1 for distributed Calibre.
+licenses:
+  # Feature required to start a Calibre DRC/PERC master
+  calibre_base:
+    feature: "calibre_drc"       # default / DRC
+    feature_perc: "calibre_perc" # used when job.flow == perc
+    tokens_available: 8
+    tokens_per_master: 1
+  # Extra tokens often consumed by MT / remote slaves (configure to match your
+  # Siemens license contract — do not invent; measure with lmstat while running).
+  calibre_mt:
+    feature: "calibre_mt"
+    tokens_available: 64
+    # Conservative planning default: 1 MT token per remote turbo thread.
+    # Override after measuring your site.
+    tokens_per_turbo_thread: 1
+    tokens_per_remote_slave: 0
+
+defaults:
+  queue: bat.l
+  # Parent/master for remote Calibre often needs only 1 slot (guide).
+  master_slots: 1
+  # Suggested turbo band from guide for mmDRC: 4–8
+  turbo_min: 4
+  turbo_max: 8
+  # Memory GB requested per remote slave (not reserved under select[mem>N])
+  mem_gb_per_slave: 64
+  # Leave headroom so other work can run
+  slot_headroom: 8
+  license_headroom: 2

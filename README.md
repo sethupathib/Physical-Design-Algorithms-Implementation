@@ -7,6 +7,10 @@ Steps--
 1. Implement Kruskal's MST using DSU.
 2. Implement Steiner Tree using MST (A lot more complex than this).
 
+## [**perc-load-balance**](./perc-load-balance)
+
+Calibre DRC/PERC LSF planner: treat **license tokens** and **per-slot semantics** as first-class constraints (TSRI EDA Cloud–style). Clone-ready scripts + whitepaper.
+
 ## Case Study
 
 1. [**Register Clustering for Optimal PPA**](https://dl.acm.org/doi/10.1145/3299902.3309753) and [**ISPD Slides.**](http://ispd.cc/slides/2019/2_placement_GracefulReg.pdf)

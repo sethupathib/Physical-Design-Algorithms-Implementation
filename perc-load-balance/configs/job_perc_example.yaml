@@ -1,0 +1,16 @@
+# Example PERC job request — fill design-specific sizes after a pilot run.
+job:
+  name: riscv_top_perc
+  flow: perc                 # perc | drc
+  design: riscv_top
+  ruledeck: /path/to/perc.rule
+  layout: /path/to/design.gds
+  # Desired parallelism intent (planner may reduce to feasible)
+  # 4×8=32 child slots — fits default MT pool (64) with headroom
+  want_remote_slaves: 4
+  want_turbo: 8
+  mem_gb_per_slave: 96
+  queue: bat.l
+  # Set true only after confirming hyperflex memory behavior on this design
+  enable_hyperflex: false
+  notes: "Existing synth+PnR done; PERC acceleration via LSF multi-host."

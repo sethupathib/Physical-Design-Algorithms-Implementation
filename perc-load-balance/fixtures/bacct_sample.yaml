@@ -1,0 +1,12 @@
+# Synthetic bacct-like records for offline scoring (not real LSF output).
+jobs:
+  - job_id: "101"
+    name: "drc_good_12slot"
+    slots_requested: 12
+    wall_time_sec: 3600
+    cpu_time_sec: 39600   # ~11× wall → near 12-slot hog
+  - job_id: "102"
+    name: "perc_overrequest"
+    slots_requested: 64
+    wall_time_sec: 3600
+    cpu_time_sec: 7200    # only ~2× wall → wasted slots
